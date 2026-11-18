@@ -950,7 +950,9 @@ var BGRP=[['ibps_po','IBPS / SBI PO · Prelims',6,[['english','अंग्र�
 (function(){var n=0,off={};BGRP.forEach(function(g){for(var k=1;k<=g[2];k++){n++;var of=g[3].map(function(p){var o=off[p[0]]||0;off[p[0]]=o+p[2];return o});PAPERS['bank'+n]={name:g[1]+' · Paper '+k,secs:Math.round(g[4]),pos:1,neg:0.25,off:of,sd:'bank',grp:g[0],parts:g[3]}}})})();
 var UGRP=[['upsi','UP पुलिस SI (उप निरीक्षक)',20,[['hindi','सामान्य हिंदी',40],['gax','मूल विधि / संविधान / सामान्य ज्ञान',40],['math','संख्यात्मक एवं मानसिक योग्यता',40],['reason','मानसिक अभिरुचि / बुद्धिमत्ता / तर्कशक्ति',40]],7200,'सामान्य हिंदी · विधि/संविधान/GK · संख्यात्मक योग्यता · रीजनिंग · 160 सवाल · 400 अंक','General Hindi · Law/Constitution/GK · Numerical Ability · Reasoning · 160 Qs · 400 marks']];
 (function(){var n=0,off={};UGRP.forEach(function(g){for(var k=1;k<=g[2];k++){n++;var of=g[3].map(function(p){var o=off[p[0]]||0;off[p[0]]=o+p[2];return o});PAPERS['upsi'+n]={name:'UP SI · Paper '+k,secs:g[4],pos:2.5,neg:0,off:of,sd:'upsi',grp:g[0],parts:g[3]}}})})();
-var GRPS={rly:RGRP,bank:BGRP,upsi:UGRP};
+var JGRP=[['upssc','UPSSSC जूनियर असिस्टेंट',15,[['hindi','हिंदी ज्ञान व लेखन क्षमता',30],['gax','उत्तर प्रदेश सामान्य ज्ञान',20],['gax','सामान्य ज्ञान',20],['reason','सामान्य बुद्धिमत्ता',15],['ict','कंप्यूटर व IT अवधारणाएँ',15]],7200,'हिंदी 30 · UP GK 20 · GK 20 · बुद्धिमत्ता 15 · कंप्यूटर 15 · 100 सवाल · 120 मिनट','Hindi 30 · UP GK 20 · GK 20 · Intelligence 15 · Computer 15 · 100 Qs · 120 min']];
+(function(){var n=0,off={};JGRP.forEach(function(g){for(var k=1;k<=g[2];k++){n++;var of=g[3].map(function(p){var o=off[p[0]]||0;off[p[0]]=o+p[2];return o});PAPERS['upssc'+n]={name:'UPSSSC Junior Assistant · Paper '+k,secs:g[4],pos:1,neg:0.25,off:of,sd:'upssc',grp:g[0],parts:g[3]}}})})();
+var GRPS={rly:RGRP,bank:BGRP,upsi:UGRP,upssc:JGRP};
 var HMAP=null;function hmap(){if(!HMAP){HMAP={};QUESTIONS.forEach(function(q){HMAP[hashS(String(q.q))]=q})}return HMAP}
 for(var ei=1;ei<=5;ei++){PAPERS['emrs'+ei]={name:'EMRS छात्रावास अधीक्षक · सेट '+ei,secs:5400,pos:1,neg:0.25,set:ei-1,parts:[['ga','सामान्य जागरूकता',12],['reason','रीजनिंग',8],['ict','ICT कंप्यूटर',8],['child','बाल सुरक्षा कानून',10],['admin','प्रशासनिक योग्यता',6],['hindi','हिन्दी',8],['english','English',8]]}}
 function hashS(s){var h=7;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return h}
@@ -2223,7 +2225,7 @@ function exView(){var d=new Date(),P=exGet(exCur()),h='';
  return h}
 
 var PPO=null;
-var PPF=[['cgl','📘','SSC CGL टियर 1','SSC CGL Tier 1','100 सवाल · 60 मिनट','100 Qs · 60 min'],['rly','🚆','रेलवे','Railway','100 सवाल · 90 मिनट · −⅓','100 Qs · 90 min · −⅓'],['bank','🏦','बैंक','Bank','IBPS · SBI · RRB','IBPS · SBI · RRB'],['upsi','👮','UP पुलिस SI','UP Police SI','160 सवाल · 400 अंक · 2 घंटे','160 Qs · 400 marks · 2 hrs']];
+var PPF=[['cgl','📘','SSC CGL टियर 1','SSC CGL Tier 1','100 सवाल · 60 मिनट','100 Qs · 60 min'],['rly','🚆','रेलवे','Railway','100 सवाल · 90 मिनट · −⅓','100 Qs · 90 min · −⅓'],['bank','🏦','बैंक','Bank','IBPS · SBI · RRB','IBPS · SBI · RRB'],['upsi','👮','UP पुलिस SI','UP Police SI','160 सवाल · 400 अंक · 2 घंटे','160 Qs · 400 marks · 2 hrs'],['upssc','🗂️','UPSSSC जूनियर असिस्टेंट','UPSSSC Junior Assistant','100 सवाल · 100 अंक · 2 घंटे · −¼','100 Qs · 100 marks · 2 hrs · −¼']];
 function ppKeys(id){return Object.keys(PAPERS).filter(function(k){return k.indexOf(id)===0&&/^[a-z]+\d+$/.test(k)})}
 function ppOpen(id){try{history.pushState({},'')}catch(e){}PPO=id;window.scrollTo(0,0);render()}
 function ppBack(){PPO=null;window.scrollTo(0,0);render()}
