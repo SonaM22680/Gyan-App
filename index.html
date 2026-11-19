@@ -945,7 +945,7 @@ function paperResult(){var c=P.cfg,n=P.qs.length;
   P.qs.forEach(function(q,i){var y=P.ans[i];h+='<div class="card"><p class="muted">Q'+(i+1)+' · '+c.parts[q.sec][1]+' · '+(y<0?'⏭️ '+T('छोड़ा','Skipped'):(y===q.a?'✅':'❌'))+'</p><b>'+pick(q.q)+'</b>';q.o.forEach(function(o,k){h+='<div style="padding:4px 0'+(k===q.a?';color:var(--good);font-weight:700':(k===y?';color:var(--bad)':''))+'">'+(k===q.a?'✔ ':(k===y?'✖ ':'• '))+pick(o)+'</div>'});if(q.e)h+='<p class="muted">💡 '+pick(q.e)+'</p>';h+=gsvBtn(q,'gsvP('+i+')');h+='</div>'});
   return h+'<button class="btn" onclick="pReview(false)">'+T('नतीजे पर वापस','Back to result')+'</button>'}
  var tot=0,att=0,cor=0,wr=0;P.res.forEach(function(r){tot+=r.m;att+=r.a;cor+=r.c;wr+=r.w});
- var h='<div class="card" style="text-align:center"><p class="muted">'+c.name+' · '+T('आपका स्कोर','Your score')+'</p><div class="big">'+(Math.round(tot*100)/100)+'<span class="muted"> / '+n*c.pos+'</span></div><p>'+T('सही','Right')+': '+cor+' · '+T('गलत','Wrong')+': '+wr+' · '+T('छोड़े','Skipped')+': '+(n-att)+'</p><p class="muted">'+T('लगा समय','Time used')+': '+fmt(P.used)+'</p></div>';
+ var h='<div class="card" style="text-align:center"><p class="muted">'+c.name+' · '+T('आपका स्कोर','Your score')+'</p><div class="big">'+(Math.round(tot*100)/100)+'<span class="muted"> / '+n*c.pos+'</span></div><p>'+T('सही','Right')+': '+cor+' · '+T('गलत','Wrong')+': '+wr+' · '+T('छोड़े','Skipped')+': '+(n-att)+'</p><p class="muted">'+T('लगा समय','Time used')+': '+fmt(P.used)+'</p><button class="btn" style="background:#128C7E" onclick="shareScore(1)">📤 '+T('स्कोर शेयर करें','Share score')+'</button></div>';
  h+='<div class="card"><b>'+T('विषय के अनुसार','Section-wise')+'</b>'+P.res.map(function(r,si){return '<div style="display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-top:1px solid var(--line)"><span>'+c.parts[si][1]+' <span class="muted">('+r.c+'/'+r.n+')</span></span><b>'+(Math.round(r.m*100)/100)+' / '+r.n*c.pos+'</b></div>'}).join('')+'</div>';
  if(P.short.length)h+='<p class="muted">'+T('सवाल बैंक में कम सवाल होने से इन हिस्सों में कम सवाल आए: ','Some sections had fewer questions: ')+P.short.join(', ')+'</p>';
  h+='<button class="btn" onclick="pReview(true)">'+T('सवाल और व्याख्या देखें','Review questions')+'</button><button class="btn ghost" onclick="pRestart()">'+T('नया पेपर दें','Take a new paper')+'</button><button class="btn ghost" onclick="pClose()">'+T('मेन्यू पर जाएँ','Back to menu')+'</button>';
@@ -990,7 +990,7 @@ function quiz(){
  if(P)return P.done?paperResult():paperView();
  if((!S.qs||!S.qs.length)&&NAV.v)return NAV.v==='topics'?navTopics():NAV.v==='quizzes'?navQuizzes():NAV.v==='saved'?gsvUI():notesUI();
  if(!S.qs||!S.qs.length){var g='display:block';return '<div class="card"><div style="'+g+'">'+CATS.map(function(x0){var x=[x0[0],x0[1],pick(x0[2])];return x[0]==='science'?navRow(x[1],x[2],T('नोट्स और क्विज़ (कक्षा 10 NCERT)','Notes & quiz (Class 10 NCERT)'),"NAV.g='sci';openNav('topics')"):x[0]==='geography'?navRow(x[1],x[2],T('नोट्स (4 भाग) और क्विज़','Notes (4 parts) & quiz'),"NAV.g='geo';openNav('topics')"):x[0]==='history'?navRow(x[1],x[2],T('प्राचीन, मध्यकालीन, आधुनिक · नोट्स और क्विज़','Ancient, Medieval, Modern · notes & quiz'),"NAV.g='his';NAV.era=null;openNav('topics')"):(x[0]==='reason'||x[0]==='ict'||x[0]==='math')?navRow(x[1],x[2],'',"NAV.g='"+x[0]+"';openNav('topics')"):(x[0]==='samvidhan'||x[0]==='hindi'||x[0]==='english'?navRow(x[1],x[2],x[0]==='english'?T('विषय अनुसार क्विज़','Topic-wise quiz'):T('विषय अनुसार क्विज़ और नोट्स','Topic-wise quiz & notes'),"NAV.g='"+(x[0]==='hindi'?'hindi':x[0]==='english'?'eng':'sam')+"';openNav('topics')"):catBtn(x[0],x[1],x[2]))}).join('')+'</div></div>'}
- if(S.done){var tot=S.qs.length;return '<div class="card" style="text-align:center"><p class="muted">'+T('आपका स्कोर','Your score')+'</p><div class="big">'+S.score.toFixed(2).replace(/\.00$/,'')+'<span class="muted"> / '+tot+'</span></div><p>'+T('सही','Right')+': '+S.right+' · '+T('गलत','Wrong')+': '+S.wrong+' · '+T('छोड़े','Skipped')+': '+S.skip+'</p><button class="btn" onclick="startQuiz(S.cat)">'+T('फिर से खेलें','Play again')+'</button><button class="btn ghost" onclick="menu()">'+T('विषय बदलें','Change subject')+'</button></div>'}
+ if(S.done){var tot=S.qs.length;return '<div class="card" style="text-align:center"><p class="muted">'+T('आपका स्कोर','Your score')+'</p><div class="big">'+S.score.toFixed(2).replace(/\.00$/,'')+'<span class="muted"> / '+tot+'</span></div><p>'+T('सही','Right')+': '+S.right+' · '+T('गलत','Wrong')+': '+S.wrong+' · '+T('छोड़े','Skipped')+': '+S.skip+'</p><button class="btn" onclick="startQuiz(S.cat)">'+T('फिर से खेलें','Play again')+'</button><button class="btn" style="background:#128C7E" onclick="shareScore(0)">📤 '+T('स्कोर शेयर करें','Share score')+'</button><button class="btn ghost" onclick="menu()">'+T('विषय बदलें','Change subject')+'</button></div>'}
  var q=S.qs[S.i],h=backBar()+'<div class="lbar"><i style="width:'+(S.i/S.qs.length*100)+'%"></i></div>'+lgBtn(q,q)+'<p class="muted">'+T('सवाल','Question')+' '+(S.i+1)+'/'+S.qs.length+' · '+pkq(q,q.s)+'</p><h2>'+pkq(q,q.q)+'</h2>';
  q.o.forEach(function(o,k){var c='opt';if(S.locked){if(k===q.a)c+=' good';else if(k===S.sel)c+=' bad'}h+='<button class="'+c+'" onclick="ans('+k+')">'+pkq(q,o)+'</button>'});
  if(S.locked){if(S.timeout)h+='<p class="err">⏰ '+T('समय खत्म!','Time up!')+'</p>';if(q.e)h+='<div class="card"><b>💡 '+T('जवाब के बारे में','About the answer')+'</b><p>'+pkq(q,q.e)+'</p></div>';h+='<button class="btn" onclick="nextQ()">'+(S.i+1<S.qs.length?T('अगला सवाल','Next'):T('नतीजा देखें','See result'))+'</button>'}
@@ -1061,7 +1061,7 @@ function chat(){
  banGet();
  var h='<h2>💬 '+T('निजी चैट','Private chat')+'</h2><div class="card"><b>⚠️ '+T('सख्त नियम','Strict rules')+'</b><p>'+T('अपनी पर्सनल डिटेल देना और गाली, अश्लील सामग्री देना या लेना सख्त मना है। अश्लील वीडियो या अश्लील फोटो भेजना प्रतिबंधित है। ऐसा कोई करता है तो उसकी ID ब्लॉक कर दी जाएगी।','Sharing your personal details, and giving or receiving abuse or obscene content, is strictly prohibited. Sending obscene videos or photos is banned. Anyone who does this will have their ID blocked.')+'</p><p class="muted">'+T('चैट के संदेश 2 दिन बाद अपने-आप हट जाते हैं।','Chat messages are deleted automatically after 2 days.')+'</p></div>';
  if(banned)return h+'<p class="err">'+T('आपकी ID चैट से ब्लॉक कर दी गई है।','Your ID has been blocked from chat.')+'</p>';
- if(!(window.GYX&&GYX.au&&GYX.au()))return h+'<p class="err">'+T('चैट के लिए पहले Games टैब में लॉगिन करें।','Please log in from the Games tab to use chat.')+'</p>';
+ if(!(window.GYX&&GYX.au&&GYX.au()))return h+accCard(T('निजी चैट के लिए लॉगिन करें।','Log in to use private chat.'));
  if(!PC.code)h+='<div class="card"><button class="btn" onclick="pcNew()">'+T('नई निजी चैट बनाएँ','Start a new private chat')+'</button><input id="pcc" maxlength="8" placeholder="'+T('चैट कोड','Chat code')+'"><button class="btn ghost" onclick="pcOpen(document.getElementById(\'pcc\').value)">'+T('कोड से जुड़ें','Join with code')+'</button></div>';
  else{if(!PC.poll)PC.poll=setInterval(pcGet,4000);
   h+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>'+T('कोड','Code')+': '+esc2(PC.code)+'</b><span><button class="lang" onclick="pcShare()">📲</button> <button class="lang" onclick="pcLeave()">'+T('बाहर','Leave')+'</button></span></div><div id="pcm" style="max-height:46vh;overflow-y:auto;margin:8px 0"></div><p class="err" id="pce">'+chatErr+'</p><input id="ci" maxlength="200" placeholder="'+T('संदेश लिखें','Type a message')+'"><button class="btn" onclick="pcSend()">'+T('भेजें','Send')+'</button></div>'}
@@ -1103,7 +1103,7 @@ function aErr(x){var m=String(x&&x.message||x);
  if(/API key not valid|API_KEY|INVALID_API/i.test(m))return tt('सेवा अभी उपलब्ध नहीं है, बाद में कोशिश करें','Service unavailable right now, please try again later');
  if(/OPERATION_NOT_ALLOWED/.test(m))return tt('लॉगिन अभी उपलब्ध नहीं है','Login is not available right now');
  if(/referer|blocked|PERMISSION|not been used|disabled/i.test(m))return tt('Firebase ने रिक्वेस्ट रोकी: ','Firebase blocked the request: ')+m.slice(0,90);
- if(/Failed to fetch|NetworkError|Load failed|network/i.test(m))return tt('नेटवर्क एरर: इंटरनेट जाँचें और दोबारा कोशिश करें','Network error: check your internet and try again');
+ if(/Failed to fetch|NetworkError|Load failed|network/i.test(m)){if(navigator.onLine===false)return tt('इंटरनेट बंद है। WiFi/डेटा चालू करें','You are offline. Turn on WiFi or mobile data');return tt('Firebase (Google) तक नहीं पहुँच पा रहे। VPN/Private DNS/ऐड-ब्लॉकर बंद करें या Chrome में खोलें। (','Cannot reach Firebase (Google). Turn off VPN / Private DNS / ad-blocker, or open in Chrome. (')+m.slice(0,40)+')'}
  return tt('एरर: ','Error: ')+m.slice(0,100)}
 function aTok(){if(!AU)return Promise.resolve('');if(AU.exp-Date.now()>60000)return Promise.resolve(AU.tok);
  return fetch('https://securetoken.googleapis.com/v1/token?key='+FIREBASE_API_KEY,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=refresh_token&refresh_token='+encodeURIComponent(AU.ref)}).then(function(r){return r.json()}).then(function(j){if(!j.id_token)throw 0;AU.tok=j.id_token;AU.ref=j.refresh_token||AU.ref;AU.exp=Date.now()+(+j.expires_in||3600)*1000;aSave();return AU.tok}).catch(function(){AU=null;aSave();return ''})}
@@ -1156,7 +1156,7 @@ function celeb(){var WC={red:'#ff6b73',green:'#5fe07f',yellow:'#ffd54a',blue:'#6
 function ghV(c,i){var s=G.t[c][i];if(s<0)return(G.d===6||qv().indexOf(6)>=0)?6:0;if(s+G.d<=56)return G.d;var f=0;qv().forEach(function(v){if(!f&&s+v<=56)f=v});return f}
 function sfx(n){if(!SND)return;rattle();setTimeout(function(){say(n)},450)}
 function ping(){if(SND){tone(0,740,.18,.08);tone(.16,988,.22,.08)}}
-function authUI(){var up=AM==='up';return '<div class=\"lbar\"><button class=\"btn'+(up?' ghost':'')+'\" style=\"margin:0\" onclick=\"LudoGame.am(\'in\')\">'+tt('लॉगिन','Login')+'</button><button class=\"btn'+(up?'':' ghost')+'\" style=\"margin:0\" onclick=\"LudoGame.am(\'up\')\">'+tt('साइन-अप','Sign up')+'</button></div>'+(up?'<input id=\"ldnm\" maxlength=\"14\" placeholder=\"'+tt('अपना नाम','Your name')+'\">':'')+'<input id=\"ldem\" type=\"email\" placeholder=\"Email\" autocomplete=\"email\"><input id=\"ldpw\" type=\"password\" placeholder=\"'+tt('पासवर्ड (कम से कम 6 अक्षर)','Password (min 6 characters)')+'\" autocomplete=\"'+(up?'new-password':'current-password')+'\">'+(up?'<label style="display:block;margin:8px 0"><input type="checkbox" id="ldag" style="width:auto"> '+tt('मैं 18 साल या उससे ज़्यादा उम्र का/की हूँ','I am 18 years or older')+'</label>':'')+btn(up?tt('खाता बनाएँ','Create account'):tt('लॉगिन करें','Log in'),'LudoGame.auth()')}
+function authUI(){var up=AM==='up';return '<div class=\"lbar\"><button class=\"btn'+(up?' ghost':'')+'\" style=\"margin:0\" onclick=\"LudoGame.am(\'in\')\">'+tt('लॉगिन','Login')+'</button><button class=\"btn'+(up?'':' ghost')+'\" style=\"margin:0\" onclick=\"LudoGame.am(\'up\')\">'+tt('साइन-अप','Sign up')+'</button></div>'+(up?'<input id=\"ldnm\" maxlength=\"14\" placeholder=\"'+tt('अपना नाम','Your name')+'\">':'')+'<input id=\"ldem\" type=\"email\" placeholder=\"Email\" autocomplete=\"email\"><input id=\"ldpw\" type=\"password\" placeholder=\"'+tt('पासवर्ड (कम से कम 6 अक्षर)','Password (min 6 characters)')+'\" autocomplete=\"'+(up?'new-password':'current-password')+'\">'+(up?'<label style="display:block;margin:8px 0"><input type="checkbox" id="ldag" style="width:auto"> '+tt('मैं 18 साल या उससे ज़्यादा उम्र का/की हूँ','I am 18 years or older')+'</label>':'')+btn(up?tt('खाता बनाएँ','Create account'):tt('लॉगिन करें','Log in'),'LudoGame.auth()')+(up?'':'<button class="btn ghost" style="margin-top:6px" onclick="LudoGame.forgot()">'+tt('पासवर्ड भूल गए?','Forgot password?')+'</button>')}
 
 function $(i){return document.getElementById(i)}
 function tt(h,e){return lang==='h'?h:e}
@@ -1267,16 +1267,21 @@ var L=window.LudoGame={ctx:function(g,m){G=g;me=m},vstop:function(){vStop()},
  voice:function(){if(!G||G.mode!=='online')return;if(VC.on){vStop();return}if(!navigator.mediaDevices||!window.RTCPeerConnection){note(tt('इस ब्राउज़र में वॉइस नहीं चलेगा','Voice is not supported in this browser'));return}navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}}).then(function(st){VC.st=st;VC.on=1;VC.mute=0;vf('PUT','/p/'+me,1).catch(function(){});vLoop();VC.iv=setInterval(vLoop,1500);vui()}).catch(function(){note(tt('माइक की अनुमति दें (ऐप https पर खुला होना चाहिए)','Allow the microphone (app must be opened over https)'))})},
  mute:function(){if(!VC.on||!VC.st)return;VC.mute=!VC.mute;VC.st.getAudioTracks().forEach(function(t){t.enabled=!VC.mute});vui()},
  snd:function(){SND=!SND;if(SND)ac();gameUI()},
- am:function(m){AM=m;menuUI()},
+ am:function(m){AM=m;render()},
+ forgot:function(){var e=(($('ldem')||{}).value||'').trim();
+  if(!e||e.indexOf('@')<1){note(tt('ऊपर अपना ईमेल लिखें, फिर "पासवर्ड भूल गए?" दबाएँ','Type your email above, then tap "Forgot password?"'));return}
+  if(L._fp&&Date.now()-L._fp<30000){note(tt('कृपया 30 सेकंड बाद दोबारा कोशिश करें','Please wait 30 seconds and try again'));return}
+  L._fp=Date.now();
+  aPost(IDT+'sendOobCode?key='+FIREBASE_API_KEY,{requestType:'PASSWORD_RESET',email:e}).then(function(){note(tt('पासवर्ड रीसेट का लिंक '+e+' पर भेज दिया है। इनबॉक्स और स्पैम दोनों देखें।','Password reset link sent to '+e+'. Check inbox and spam.'))}).catch(function(x){L._fp=0;var m=String(x&&x.message||x);note(/EMAIL_NOT_FOUND/.test(m)?tt('इस ईमेल से कोई खाता नहीं मिला','No account found with this email'):aErr(x))})},
   opn:function(){OPN=!OPN;menuUI()},
   help:function(){note(tt('6 आने पर वह होल्ड हो जाता है और दोबारा पासा मिलता है (लगातार तीन 6 आए तो सारे 6 खराब)। 1 से 5 आने पर होल्ड किए अंक और यह अंक आप अपनी मर्ज़ी से किसी भी क्रम में चला सकते हैं। गोटी काटने या घर पहुँचाने पर भी दोबारा चाल मिलती है, और वह चाल पहले चली जाती है (होल्ड किए 6 बाद में चलेंगे)। चारों गोटियाँ पहले घर पहुँचाने वाला जीतता है।','A 6 is held and you roll again (three 6s in a row cancel all sixes and you lose the turn). When a 1-5 comes, you choose the order in which to play the held numbers. Capturing or reaching home also gives another roll, and that bonus roll is played first (held numbers stay saved for after it). First to bring all 4 pieces home wins.'))},
- logout:function(){AU=null;pname='Player';aSave();menuUI()},
+ logout:function(){AU=null;AM='in';pname='Player';aSave();render()},
  auth:function(){var e=($('ldem').value||'').trim(),p=$('ldpw').value||'',up=AM==='up',n=up?($('ldnm').value||'').trim().slice(0,14):'';
   if(!e||!p){note(tt('ईमेल और पासवर्ड भरें','Enter email and password'));return}
   if(up&&!n){note(tt('अपना नाम लिखें','Enter your name'));return}
   if(up&&!($('ldag')&&$('ldag').checked)){note(tt('18+ की पुष्टि के लिए बॉक्स पर टिक करें','Tick the box to confirm you are 18 or older'));return}
   var K='?key='+FIREBASE_API_KEY;
-  aPost(IDT+(up?'signUp':'signInWithPassword')+K,{email:e,password:p,returnSecureToken:true}).then(function(j){if(up)aPost(IDT+'update'+K,{idToken:j.idToken,displayName:n}).catch(function(){});aSet(j,n);menuUI()}).catch(function(x){note(aErr(x))})},
+  aPost(IDT+(up?'signUp':'signInWithPassword')+K,{email:e,password:p,returnSecureToken:true}).then(function(j){if(up)aPost(IDT+'update'+K,{idToken:j.idToken,displayName:n}).catch(function(){});aSet(j,n);render()}).catch(function(x){note(aErr(x))})},
  share:function(){var t=tt('Ludo खेलो! रूम कोड: ','Play Ludo! Room code: ')+G.code;if(navigator.share)navigator.share({text:t}).catch(function(){});else if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){note(tt('कोड कॉपी हो गया','Code copied'))}).catch(function(){note(t)});else note(t)},
  roll:function(c0){if(!G||G.rolled||G.win||!mine()||RL)return;if(c0&&c0!==cur())return;RL=1;RV=rdie();rattle();COL.forEach(function(x){var b=$('ldd-'+x);if(b)b.className='dbtn sd no'});flash(RV);setTimeout(function(){RL=0;L.roll2()},520)},
  roll2:function(){if(!G||G.rolled||G.win||!mine())return;var d=RV||(1+Math.floor(Math.random()*6));RV=0;G.miss=G.miss||{};var cc=cur();if(stuckC(cc)){G.miss[cc]=d===6?0:(G.miss[cc]||0)+1}else G.miss[cc]=0;G.d=d;if(SND)say(d);var q=qv();q.push(d);G.q=q.join(',');
@@ -1315,7 +1320,7 @@ function botMove(c){var best=null,sv=G.d;usab(c).forEach(function(v){G.d=v;movLi
 function botTick(){if(!G||G.mode!=='online'||me!=='red'||!G.bots||G.win||MV||RL)return;var c=cur();if(!G.bots[c]){bdue=0;return}
  if(!bdue){bdue=Date.now()+1300+Math.random()*2200;return}if(Date.now()<bdue)return;bdue=0;
  BT=c;try{if(!G.rolled){RV=bdie();rattle();flash(RV);RL=1;setTimeout(function(){RL=0;BT=c;try{L.roll2()}finally{BT=null}},520)}else botMove(c)}finally{BT=null}}
-window.GYX={bn:botName,aTok:aTok,au:function(){return AU},db:FIREBASE_DB_URL,key:FIREBASE_API_KEY,clr:function(){AU=null;pname='Player';aSave()},needAuth:false,tt:tt,esc:esc,authUI:authUI,tone:tone,ac:ac,snd:function(){return SND}};
+window.GYX={bn:botName,aTok:aTok,au:function(){return AU},db:FIREBASE_DB_URL,key:FIREBASE_API_KEY,clr:function(){AU=null;pname='Player';aSave()},needAuth:false,tt:tt,esc:esc,authUI:authUI,am:function(){return AM},tone:tone,ac:ac,snd:function(){return SND}};
 var GOPEN=0;
 window.ludoOpen=function(v){try{history.pushState({},'')}catch(e){}GOPEN=v;window.scrollTo(0,0);render()};
 window.ludoIsOpen=function(){return GOPEN};
@@ -2100,7 +2105,7 @@ var CHESS_B64='PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImhpIj48aGVhZD48bWV0YSBjaGFyc
 function chessView(){return '<iframe id="chessf" allow="microphone" title="Chess" style="width:100%;height:calc(100vh - 150px);min-height:560px;border:0;border-radius:12px"></iframe>'}
 function chessAfter(){var f=document.getElementById('chessf');if(!f)return;try{var bin=atob(CHESS_B64),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);f.srcdoc=new TextDecoder('utf-8').decode(u)}catch(e){f.outerHTML='<p class="err">Chess load nahi hua</p>'}}
 // ===== Help & Support (हेल्प) =====
-var HELP_EMAIL='dineshkumarjag238@gmail.com';
+var HELP_EMAIL='shreesitaram9988@gmail.com';
 function acctDel(){var X=window.GYX,a=X&&X.au&&X.au(),g=function(i){var e=document.getElementById(i);return e?e:{}};
  if(!a||!a.email){note(T('पहले लॉगिन करें','Please log in first'));return}
  var pw=g('hdp').value||'';
@@ -2140,6 +2145,22 @@ function helpOpen(){helpClose();try{history.pushState({},'')}catch(e){}
  +'<label style="display:block;margin:6px 0"><input type="checkbox" id="hdk" style="width:auto"> '+T('मैं समझता/समझती हूँ कि यह वापस नहीं होगा','I understand this cannot be undone')+'</label>'
  +'<button class="btn" style="background:#c62828;border-color:#c62828;color:#fff" onclick="acctDel()">🗑️ '+T('मेरा अकाउंट हमेशा के लिए हटाएँ','Permanently delete my account')+'</button></div>';
  document.body.appendChild(d);document.body.style.overflow='hidden'}
+// ===== शेयर / Share =====
+var APP_URL='https://sonam22680.github.io/Gyan-App/'; /* Play Store पर आने के बाद यहाँ Play Store का लिंक डालें / put the Play Store link here later */
+function shareGo(text){
+ var full=text+'\n'+APP_URL;
+ if(navigator.share){navigator.share({text:full}).catch(function(){});return}
+ try{navigator.clipboard.writeText(full).then(function(){note(T('कॉपी हो गया, अब WhatsApp में चिपकाएँ','Copied. Paste it in WhatsApp'))},function(){window.open('https://wa.me/?text='+encodeURIComponent(full),'_blank')});return}catch(e){}
+ window.open('https://wa.me/?text='+encodeURIComponent(full),'_blank')}
+function shareApp(){shareGo(T('📚 ज्ञान ऐप: SSC, रेलवे, बैंक और UP परीक्षा के लिए फ़्री क्विज़, मॉक टेस्ट और नोट्स (हिंदी + English)। तुम भी आज़माओ!','📚 Gyan App: free quizzes, mock tests and notes for SSC, Railway, Bank and UP exams (Hindi + English). Try it!'))}
+function shareScore(kind){var sc,tot,nm;
+ try{if(kind===1&&P){var t=0;P.res.forEach(function(r){t+=r.m});sc=Math.round(t*100)/100;tot=P.qs.length*P.cfg.pos;nm=P.cfg.name}
+ else if(S&&S.qs){sc=S.score.toFixed(2).replace(/\.00$/,'');tot=S.qs.length;nm=S.mock||(S.cat?gsvCat(S.cat):'')}}catch(e){}
+ if(sc===undefined){shareApp();return}
+ shareGo(T('मैंने ज्ञान ऐप पर '+(nm?nm+' में ':'')+sc+' / '+tot+' स्कोर किया! 🎯 क्या तुम मुझे हरा सकते हो?','I scored '+sc+' / '+tot+(nm?' in '+nm:'')+' on Gyan App! 🎯 Can you beat me?'))}
+function accCard(why){var a=window.GYX&&GYX.au&&GYX.au();
+ if(a)return '<div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:10px"><span>👤 <b>'+esc2(a.name||'Player')+'</b><br><small class="muted">'+esc2(a.email||'')+'</small></span><button class="btn ghost" style="width:auto;margin:0;padding:8px 16px" onclick="LudoGame.logout()">'+T('लॉगआउट','Log out')+'</button></div>';
+ return '<div class="card" style="text-align:center"><b>🔐 '+T('लॉगिन ज़रूरी है','Login required')+'</b><p class="muted">'+(why||T('ऑनलाइन Ludo और निजी चैट के लिए लॉगिन चाहिए।','Login is needed for online Ludo and private chat.'))+'</p><button class="btn" style="margin:0" onclick="GUEST=false;render()">'+T('लॉगिन / साइन-अप करें','Login / Sign up')+'</button></div>'}
 function dotMenuClose(){var o=document.getElementById('dtm');if(o&&o.remove)o.remove();document.removeEventListener('click',dotMenuClose)}
 function dotCtx(){
  if(tab==='quiz'||tab==='pp'){if(P)return {k:'paper',ex:1};if(tab==='pp')return {k:'quizhome'};if(S&&S.qs&&S.qs.length)return {k:'quiz',ex:1};return {k:'quizhome'}}
@@ -2149,7 +2170,8 @@ function dotMenu(ev){if(ev)ev.stopPropagation();if(document.getElementById('dtm'
  var c=dotCtx(),bs='display:block;width:100%;text-align:left;border:0;background:none;color:inherit;font:inherit;font-weight:600;padding:14px 16px',
  b=document.getElementById('hpb'),d=document.createElement('div');d.id='dtm';
  d.style.cssText='position:absolute;right:0;top:calc(100% + 8px);min-width:200px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.3);z-index:80;overflow:hidden';
- d.innerHTML='<button onclick="dotMenuClose();helpOpen()" style="'+bs+'">'+T('मदद और संपर्क','Help & Support')+'</button>'
+ d.innerHTML='<button onclick="dotMenuClose();shareApp()" style="'+bs+'">📤 '+T('ऐप शेयर करें','Share app')+'</button>'
+  +'<button onclick="dotMenuClose();helpOpen()" style="'+bs+';border-top:1px solid var(--line)">'+T('मदद और संपर्क','Help & Support')+'</button>'
   +'<button onclick="dotMenuClose();dirOpen()" style="'+bs+';border-top:1px solid var(--line)">'+dirLabel()+'</button>'
   +(c.ex?'<button onclick="dotMenuClose();exitAsk()" style="'+bs+';border-top:1px solid var(--line)">'+(c.k==='quiz'||c.k==='paper'?T('क्विज़ से बाहर जाएँ','Exit quiz'):T('गेम से बाहर जाएँ','Exit game'))+'</button>':'');
  b.parentNode.appendChild(d);setTimeout(function(){document.addEventListener('click',dotMenuClose)},0)}
@@ -2184,8 +2206,8 @@ function dirOpen(){dirClose();try{history.pushState({},'')}catch(e){}
  d.innerHTML='<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button onclick="dirClose()" aria-label="Back" style="border:1px solid var(--line);background:var(--card);border-radius:12px;padding:8px 18px;font-size:17px;font-weight:800;line-height:1">'+T('वापस','Back')+'</button><b style="font-size:19px">'+dirLabel()+'</b></div><div class="card"><b>'+x[0]+'</b>'+x[1]+'</div>';
  document.body.appendChild(d);document.body.style.overflow='hidden'}
 // ===== मासिक परीक्षा / Monthly Exam =====
-// बदलने के लिए: EX_N = कुल सवाल, EX_MIN = मिनट, EX_NEG = गलत जवाब पर कटौती
-var EX_N=25,EX_MIN=25,EX_NEG=0.25,EX={t:null,rev:false};
+// बदलने के लिए: EX_N = कुल सवाल, EX_MIN = मिनट (12.5 = 12 मिनट 30 सेकंड), EX_NEG = गलत जवाब पर कटौती
+var EX_N=25,EX_MIN=12.5,EX_NEG=0.25,EX={t:null,rev:false};
 function exMon(d){var h=['जनवरी','फ़रवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर'],e=['January','February','March','April','May','June','July','August','September','October','November','December'];return T(h[d.getMonth()],e[d.getMonth()])+' '+d.getFullYear()}
 function exKey(y,m){return 'gy_exam_'+y+'_'+m}
 function exCur(){var d=new Date();return exKey(d.getFullYear(),d.getMonth()+1)}
@@ -2200,6 +2222,7 @@ function exBuild(){var d=new Date(),r=exRand(d.getFullYear()*100+d.getMonth()+1)
  var pool=Object.keys(g).sort().map(function(k){return exShuf(g[k],r)}),out=[];
  while(out.length<EX_N&&pool.some(function(p){return p.length})){pool.forEach(function(p){if(out.length<EX_N&&p.length)out.push(p.shift())})}
  return exShuf(out,r).map(function(q){return {c:q.c,s:q.s||'',q:q.q,o:q.o,a:q.a,e:q.e||''}})}
+function exDur(h){var t=Math.round(EX_MIN*60),m=Math.floor(t/60),x=t%60;return h?(m+' मिनट'+(x?' '+x+' सेकंड':'')):(m+' min'+(x?' '+x+' sec':''))}
 function exTL(P){return Math.max(0,Math.floor((P.start+EX_MIN*60000-Date.now())/1000))}
 function exFmt(s){var m=Math.floor(s/60),x=s%60;return (m<10?'0':'')+m+':'+(x<10?'0':'')+x}
 function exStart(){var qs=exBuild();if(qs.length<5){note(T('अभी पर्याप्त सवाल नहीं हैं','Not enough questions yet'));return}
@@ -2222,7 +2245,7 @@ function exView(){var d=new Date(),P=exGet(exCur()),h='';
  if(!P){
   h='<h2>🏆 '+T('मासिक परीक्षा','Monthly Exam')+' · '+exMon(d)+'</h2><div class="card"><b>'+T('नियम','Rules')+'</b><ul>'
    +'<li>'+T('सभी विषयों से मिले-जुले '+EX_N+' सवाल','Mixed '+EX_N+' questions from all subjects')+'</li>'
-   +'<li>'+T('समय: '+EX_MIN+' मिनट। शुरू होने के बाद रुकता नहीं, ऐप बंद करने पर भी चलता रहेगा','Time: '+EX_MIN+' minutes. Once started it does not pause, even if you close the app')+'</li>'
+   +'<li>'+T('समय: '+exDur(1)+'। शुरू होने के बाद रुकता नहीं, ऐप बंद करने पर भी चलता रहेगा','Time: '+exDur(0)+'. Once started it does not pause, even if you close the app')+'</li>'
    +'<li>'+T('सही +1, गलत −'+EX_NEG+', छोड़ने पर 0','Correct +1, wrong −'+EX_NEG+', skipped 0')+'</li>'
    +'<li>'+T('इस महीने सबका पेपर एक ही है। स्कोर सिर्फ़ एक बार दर्ज होगा','Everyone gets the same paper this month. Your score is recorded once')+'</li>'
    +'<li>'+T('नई परीक्षा अगले महीने की 1 तारीख से','New exam from the 1st of next month')+'</li></ul>'
@@ -2237,9 +2260,9 @@ function exView(){var d=new Date(),P=exGet(exCur()),h='';
    +P.qs.map(function(x,n){var a=P.ans[n]>=0,c=n===i;return '<button onclick="exGo('+n+')" style="width:40px;height:40px;border-radius:10px;font-weight:700;border:2px solid '+(c?'var(--acc)':'var(--line)')+';background:'+(a?'var(--good)':'var(--card)')+';color:'+(a?'#fff':'var(--ink)')+'">'+(n+1)+'</button>'}).join('')+'</div></div>'
    +'<button class="btn ghost" onclick="exSubmit()">'+T('परीक्षा जमा करें','Submit exam')+'</button>';
  }else{
-  var mins=Math.max(1,Math.round((P.end-P.start)/60000));
+  var mins=(function(){var t=Math.max(1,Math.round((P.end-P.start)/1000)),m=Math.floor(t/60),x=t%60;return m+':'+(x<10?'0':'')+x})();
   h='<h2>🏆 '+exMon(d)+'</h2><div class="card" style="text-align:center"><p class="muted">'+T('आपका स्कोर','Your score')+'</p><div class="big">'+exSc(P.score)+'<span class="muted"> / '+P.n+'</span></div>'
-   +'<p>'+T('सही','Right')+': '+P.right+' · '+T('गलत','Wrong')+': '+P.wrong+' · '+T('छोड़े','Skipped')+': '+P.skip+'</p><p class="muted">'+T('समय लगा: ','Time taken: ')+mins+' '+T('मिनट','min')+'</p></div>'
+   +'<p>'+T('सही','Right')+': '+P.right+' · '+T('गलत','Wrong')+': '+P.wrong+' · '+T('छोड़े','Skipped')+': '+P.skip+'</p><p class="muted">'+T('समय लगा: ','Time taken: ')+mins+' '+T('मिनट:सेकंड','min:sec')+'</p></div>'
    +'<button class="btn" onclick="exRev()">'+(EX.rev?T('जवाब छिपाएँ','Hide answers'):T('सही जवाब देखें','Review answers'))+'</button>';
   if(EX.rev)h+=P.qs.map(function(q,i){var a=P.ans[i],st=a<0?'⏭️ '+T('छोड़ा','Skipped'):a===q.a?'✅ '+T('सही','Correct'):'❌ '+T('गलत','Wrong');
    return '<div class="card"><p class="muted">'+(i+1)+'. '+st+' · '+exLab(q)+'</p><b>'+pick(q.q)+'</b>'+q.o.map(function(o,k){var c='opt';if(k===q.a)c+=' good';else if(k===a)c+=' bad';return '<div class="'+c+'">'+pick(o)+'</div>'}).join('')+(q.e?'<p class="muted">💡 '+pick(q.e)+'</p>':'')+'</div>'}).join('');
@@ -2265,9 +2288,15 @@ var MODULES=[
  {id:'chat',icon:'💬',t:['निजी चैट','Private chat'],view:chat}
 ];
 
+var ALLOW_GUEST=true,GUEST=false; /* Play Store पर डालते समय चाहें तो ALLOW_GUEST=false कर दें / set false to force login */
+function gateHTML(){
+ return '<div style="text-align:center;margin:14px 0 4px"><div style="font-size:60px;line-height:1.1">📚</div><div style="font-size:26px;font-weight:800;margin-top:4px">'+T('ज्ञान ऐप','Gyan App')+'</div><p class="muted">'+T('SSC · रेलवे · बैंक · UP परीक्षा की तैयारी','Prepare for SSC · Railway · Bank · UP exams')+'</p></div>'
+ +'<div class="card"><b>'+(GYX.am()==='up'?T('नया खाता बनाएँ','Create your account'):T('अपने खाते में लॉगिन करें','Log in to your account'))+'</b><p class="muted">'+T('एक बार लॉगिन करें, फिर क्विज़, गेम्स और चैट सब चलेंगे।','Log in once and everything works: quizzes, games and chat.')+'</p>'+GYX.authUI()+'<p class="muted" style="font-size:13px">'+T('साइन-अप करके आप ','By signing up you agree to the ')+'<a href="https://sonam22680.github.io/Gyan-App/terms.html" target="_blank" rel="noopener">Terms</a> · <a href="https://sonam22680.github.io/Gyan-App/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>'+T(' से सहमत होते हैं।','.')+'</p></div>'
+ +(ALLOW_GUEST?'<div style="text-align:center;margin:10px 0"><button class="btn ghost" style="margin:0" onclick="GUEST=true;render()">'+T('अभी बिना लॉगिन आगे बढ़ें','Continue without login')+'</button><p class="muted" style="font-size:13px">'+T('क्विज़ और नोट्स चलेंगे। ऑनलाइन गेम और चैट के लिए बाद में लॉगिन करना होगा।','Quizzes and notes will work. Online games and chat need login later.')+'</p></div>':'')+'<div style="text-align:center;margin:8px 0"><button class="lang" style="border-color:var(--acc)" onclick="qlTog()">🌐 '+(lang==='h'?'English':'हिन्दी')+'</button></div>'}
 function render(){
  document.documentElement.lang=lang==='h'?'hi':'en';
  document.getElementById('ttl').textContent=T('ज्ञान ऐप','Gyan App');
+ if(window.GYX&&GYX.au&&!GYX.au()&&!(ALLOW_GUEST&&GUEST)){clearInterval(TM);TM=null;document.getElementById('app').innerHTML=gateHTML();document.getElementById('nav').innerHTML='';return}
  document.getElementById('lg').textContent=lang==='h'?'English':'हिंदी';
  var m=MODULES.filter(function(x){return x.id===tab})[0];
  document.getElementById('app').innerHTML=m.view();if(tab==='games')ludoAfter();if(tab==='chat')pcDraw();if(tab==='exam')exAfter();else exStop();
@@ -4029,7 +4058,8 @@ window.GYC={
  give:function(n,why){if(!(n>0))return;window.gyAddCoins(n);note('🪙 +'+n+(why?' · '+why:''))},
  sitaraMs:function(a,b){var R={30:15,70:30,120:60};for(var l=a;l<b;l++)if(R[l])GYC.give(R[l],T('लेवल '+l+' पूरा','Level '+l+' done'))}
 };
-var _lv=window.ludoView;window.ludoView=function(){var o=window.ludoIsOpen();if(o===5)return qView();if(o===6)return spinView();if(!o)return hubHome();return _lv()};
+var _lv=window.ludoView;window.window.accCard=accCard;
+ludoView=function(){var o=window.ludoIsOpen();if(o===5)return qView();if(o===6)return spinView();if(!o)return accCard()+hubHome();return _lv()};
 var _la=window.ludoAfter;window.ludoAfter=function(){var o=window.ludoIsOpen();if(o===5||o===6)return;return _la()};
 var _lo=window.ludoOpen;window.ludoOpen=function(v){if(v===5)qReset();if(v===6){SPN.res=null}return _lo(v)};
 var _lb=window.ludoBack;window.ludoBack=function(){var o=window.ludoIsOpen();if(o===5)qExit();if(o===6)spDone();return _lb()};
