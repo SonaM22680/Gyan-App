@@ -1255,7 +1255,7 @@ var L=window.LudoGame={ctx:function(g,m){G=g;me=m},vstop:function(){vStop()},
  snd:function(){SND=!SND;if(SND)ac();gameUI()},
  am:function(m){AM=m;menuUI()},
   opn:function(){OPN=!OPN;menuUI()},
-  help:function(){note(tt('6 आने पर वह होल्ड हो जाता है और दोबारा पासा मिलता है (लगातार तीन 6 आए तो सारे 6 खराब)। 1 से 5 आने पर होल्ड किए अंक और यह अंक आप अपनी मर्ज़ी से किसी भी क्रम में चला सकते हैं। गोटी काटने या घर पहुँचाने पर भी दोबारा चाल। चारों गोटियाँ पहले घर पहुँचाने वाला जीतता है।','A 6 is held and you roll again (three 6s in a row cancel all sixes and you lose the turn). When a 1-5 comes, you choose the order in which to play the held numbers. Capturing or reaching home also gives another roll. First to bring all 4 pieces home wins.'))},
+  help:function(){note(tt('6 आने पर वह होल्ड हो जाता है और दोबारा पासा मिलता है (लगातार तीन 6 आए तो सारे 6 खराब)। 1 से 5 आने पर होल्ड किए अंक और यह अंक आप अपनी मर्ज़ी से किसी भी क्रम में चला सकते हैं। गोटी काटने या घर पहुँचाने पर भी दोबारा चाल मिलती है, और वह चाल पहले चली जाती है (होल्ड किए 6 बाद में चलेंगे)। चारों गोटियाँ पहले घर पहुँचाने वाला जीतता है।','A 6 is held and you roll again (three 6s in a row cancel all sixes and you lose the turn). When a 1-5 comes, you choose the order in which to play the held numbers. Capturing or reaching home also gives another roll, and that bonus roll is played first (held numbers stay saved for after it). First to bring all 4 pieces home wins.'))},
  logout:function(){AU=null;pname='Player';aSave();menuUI()},
  auth:function(){var e=($('ldem').value||'').trim(),p=$('ldpw').value||'',up=AM==='up',n=up?($('ldnm').value||'').trim().slice(0,14):'';
   if(!e||!p){note(tt('ईमेल और पासवर्ड भरें','Enter email and password'));return}
@@ -1266,14 +1266,14 @@ var L=window.LudoGame={ctx:function(g,m){G=g;me=m},vstop:function(){vStop()},
  share:function(){var t=tt('Ludo खेलो! रूम कोड: ','Play Ludo! Room code: ')+G.code;if(navigator.share)navigator.share({text:t}).catch(function(){});else if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){note(tt('कोड कॉपी हो गया','Code copied'))}).catch(function(){note(t)});else note(t)},
  roll:function(c0){if(!G||G.rolled||G.win||!mine()||RL)return;if(c0&&c0!==cur())return;RL=1;RV=rdie();rattle();COL.forEach(function(x){var b=$('ldd-'+x);if(b)b.className='dbtn sd no'});flash(RV);setTimeout(function(){RL=0;L.roll2()},520)},
  roll2:function(){if(!G||G.rolled||G.win||!mine())return;var d=RV||(1+Math.floor(Math.random()*6));RV=0;G.miss=G.miss||{};var cc=cur();if(stuckC(cc)){G.miss[cc]=d===6?0:(G.miss[cc]||0)+1}else G.miss[cc]=0;G.d=d;if(SND)say(d);var q=qv();q.push(d);G.q=q.join(',');
-  if(d===6){if(q.length>=3){G.q='';G.xe=0;save();draw();note(tt('लगातार तीन 6! सारे 6 खराब, बारी चली गई','Three 6s in a row! All sixes are void, turn lost'));setTimeout(function(){G.rolled=false;G.turn=(G.turn+1)%G.pl.length;save();draw()},1500);return}
+  if(d===6){if(q.filter(function(v){return v===6}).length>=3){G.q='';G.xe=0;save();draw();note(tt('लगातार तीन 6! सारे 6 खराब, बारी चली गई','Three 6s in a row! All sixes are void, turn lost'));setTimeout(function(){G.rolled=false;G.turn=(G.turn+1)%G.pl.length;save();draw()},1500);return}
    save();draw();note(tt('6 होल्ड हुआ, दोबारा पासा फेंकें','6 is held, roll again'));return}
   G.rolled=true;save();draw();L.chk()},
   chk:function(){if(!G||G.win)return;var c=cur(),u=usab(c);if(!u.length){setTimeout(function(){L.nx()},450);return}
    if(u.indexOf(G.d)<0){G.d=u[0];save()}draw();
    if(u.length===1){G.d=u[0];var l=movList(c);if(l.length===1||l.every(function(i){return G.t[c][i]===G.t[c][l[0]]}))setTimeout(function(){L.mv(c,l[0])},150)}},
   pv:function(v){if(!G||!G.rolled||G.win||!mine()||MV)return;if(qv().indexOf(v)<0)return;if(usab(cur()).indexOf(v)<0)return;G.d=v;save();draw()},
-  nx:function(){if(!G||G.win)return;var c=cur();if(qv().length&&usab(c).length){G.rolled=true;save();draw();L.chk();return}
+  nx:function(){if(!G||G.win)return;var c=cur();if(qv().length&&usab(c).length){if(G.xe){G.xe=0;G.rolled=false;save();draw();note(tt('बोनस चाल मिली! पहले पासा फेंकें, होल्ड किए अंक बचे हुए हैं','Bonus roll! Roll first, your held numbers are saved'));return}G.rolled=true;save();draw();L.chk();return}
    G.q='';G.rolled=false;if(G.xe){G.xe=0}else{G.turn=(G.turn+1)%G.pl.length}save();draw()},
  mv:function(c,i){if(!G||!G.rolled||G.win||c!==cur()||!mine()||MV)return;var sv=G.t[c][i];if(sv<0){if(G.d!==6&&qv().indexOf(6)<0)return;G.d=6}else if(!mov(c,i)){var f=0;qv().forEach(function(v){if(!f&&sv+v<=56)f=v});if(!f)return;G.d=f}var from=G.t[c][i],ns=from<0?0:from+G.d;MV=1;stepAnim(c,i,from,ns,function(){MV=0;L.fin(c,i,ns)})},
  fin:function(c,i,ns){var cap=false;G.t[c][i]=ns;
@@ -1376,8 +1376,14 @@ function done(c){var e=E();return G.m[c].every(function(r){return r>e})}
 function ctl(c){if(!done(c))return[c];if(G.seats.length===4){var p=G.seats[(G.seats.indexOf(c)+2)%4];return done(p)?[]:[p]}return[]}
 function nm(c){return NH[c]+(G.names[c]?' ('+esc(G.names[c])+')':'')}
 function at(a,ex){var r=null;G.seats.forEach(function(c){G.m[c].forEach(function(x,i){if(x>=0&&x<=E()&&abs(c,x)===a&&!(ex&&ex.c===c&&ex.i===i))r={c:c,i:i}})});return r}
+function killCnt(c,i,r,t){var e=E(),n=0,q,o,b;
+ if(G.card==='K'&&r>=0){for(q=r+1;q<=Math.min(t,e);q++){if(q===e&&r<e)continue;o=at(abs(c,q),{c:c,i:i});if(o){if(o.c===c)return -1;n++}}}
+ else if(t<=e){o=at(abs(c,t),{c:c,i:i});if(o){if(o.c===c)return -1;n++}}
+ if(t<=e&&GE().n===2){b={47:5,19:33}[abs(c,t)];if(b!==undefined){o=at(b,{c:c,i:i});if(o&&G.m[o.c][o.i]!==0){if(o.c===c)return -1;n++}}}
+ return n}
 function ok(c,i,t){var r=G.m[c][i],e=E();if(t<0||t>e+4)return false;
  if(t<=e){var o=at(abs(c,t),{c:c,i:i});if(o&&G.m[o.c][o.i]===0){if(o.c!==c)WHY='safe';return false}if(o&&(tm(o.c,c)&&o.c!==c&&!(G.card==='K'&&r>=0)))return false}
+ var kc=killCnt(c,i,r,t);if(kc<0){WHY='own';return false}if(kc>1){WHY='two';return false}
  for(var j=0;j<4;j++){var x=G.m[c][j];if(j!==i&&x>e&&x>r&&x<=t)return false}
  var lo,hi,q,o2,k4;if(G.card==='4'&&r>=0){for(k4=1;k4<4;k4++){q=((r-k4)%(e+1)+e+1)%(e+1);o2=at(abs(c,q),{c:c,i:i});if(o2&&G.m[o2.c][o2.i]===0)return false}return true}
  if(G.card==='5'&&r>=0&&t<r){for(q=r+1;q<=e;q++){o2=at(abs(c,q),{c:c,i:i});if(o2&&G.m[o2.c][o2.i]===0)return false}for(q=0;q<t;q++){o2=at(abs(c,q),{c:c,i:i});if(o2&&G.m[o2.c][o2.i]===0)return false}return true}
@@ -1394,7 +1400,7 @@ function deal(){var n=[4,4,5][G.dn%3];if((G.deck||[]).length<n*G.seats.length)G.
 function jsetT(c,i,t){var e=E(),q;for(q=t+1;q<=e+4;q++){if(!G.m[c].some(function(x,j){return j!==i&&x===q}))return false}return true}
 function hint(){var s=G.card,out={},own=ctl(cur());H(cur()).forEach(function(k){if(k==='J')return;G.card=k;var cp=0,hm=0,os=opt();os.forEach(function(n){movable(n).forEach(function(m){if(own.indexOf(m.c)<0)return;var r=G.m[m.c][m.i];if(m.to<=E()&&at(abs(m.c,m.to),{c:m.c,i:m.i}))cp=1;if((r>=0&&r<=E()&&m.to>E())||(JK_LANE_BONUS&&r>E()&&m.to>r))hm=1})});out[k]={cap:cp,home:hm}});G.card=s;return out}
 function anyPlay(){var s=G.card,r=(G.rem>0?['7']:H(cur())).some(function(k){if(k==='10')return true;if(k==='D')return H(G.seats[(G.turn+1)%2]).length>0;G.card=k;return anyMove()});G.card=s;return r}
-function RL(k){return{J:tt('गुलाम: अपनी गोटी दबाएँ, फिर बोर्ड पर विरोधी/साथी की गोटी दबाएँ — जगह बदल जाएगी (बेस/सेफ ज़ोन की गोटी नहीं)','Jack: tap your marble, then an opponent/partner marble on the board to swap places (not base/safe zone)'),A:tt('इक्का: गोटी बाहर निकालें, या 1 / 11 कदम','Ace: bring a marble out, or move 1 / 11'),K:G.seats.length===4?tt('बादशाह: सिर्फ़ गोटी बाहर निकालता है, और कोई काम नहीं','King: only brings a marble out, nothing else'):tt('बादशाह: गोटी बाहर निकालें, या 13 कदम (रास्ते की सब गोटियाँ मरेंगी, अपनी भी)','King: bring a marble out, or move 13 (kills every marble on the way, even your own)'),Q:tt('बेगम: 12 कदम आगे','Queen: move 12'),D:tt('12 (खाली पत्ता): सिर्फ़ डिस्कार्ड। फेंकने पर सामने वाले का अपनी पसंद का एक पत्ता खींचकर बीच में फेंकें; उसकी बारी कट जाएगी और फिर आपकी ही बारी','12 (blank card): discard only. Throw it to pull any one opponent card into the middle; the opponent skips a turn and you play again'),'2':G.seats.length===2?tt('दो: गोटी बाहर निकालें, या 2 कदम आगे','Two: bring a marble out, or move 2'):tt('पत्ते के नंबर जितने कदम आगे','Move forward by the card number'),'4':tt('अपनी गोटी 4 कदम पीछे (शुरू से पीछे जाए तो सेफ ज़ोन के पास)','Move your marble 4 back (from start it goes next to the safe zone)'),'5':tt('बोर्ड की किसी भी गोटी को 5 कदम आगे (साथी/विरोधी की घर वाली गोटी नहीं चलेगी)','Move ANY marble on the board 5 forward (not partner/opponent marbles in their home lane)'),'7':tt('7: एक गोटी पूरे 7 कदम चलती है। दो गोटियों में (जैसे 4+3) तभी बाँट सकते हैं जब दूसरी गोटी के बचे कदम चलने की जगह हो','7: one marble moves all 7. Split between two marbles (e.g. 4+3) only if the second marble has room for the remaining steps'),'10':tt('आपकी मर्ज़ी: अपनी गोटी 10 कदम चलाएँ, या नीचे का बटन दबाकर डिस्कार्ड करें (अगला खिलाड़ी अपनी पसंद का एक पत्ता फेंकेगा)','Your choice: move your marble 10, or press the button below to discard (the next player discards a card of their choice)')}[k]||tt('पत्ते के नंबर जितने कदम आगे','Move forward by the card number')}
+function RL(k){return{J:tt('गुलाम: अपनी गोटी दबाएँ, फिर बोर्ड पर विरोधी/साथी की गोटी दबाएँ — जगह बदल जाएगी (बेस/सेफ ज़ोन की गोटी नहीं)','Jack: tap your marble, then an opponent/partner marble on the board to swap places (not base/safe zone)'),A:tt('इक्का: गोटी बाहर निकालें, या 1 / 11 कदम','Ace: bring a marble out, or move 1 / 11'),K:G.seats.length===4?tt('बादशाह: सिर्फ़ गोटी बाहर निकालता है, और कोई काम नहीं','King: only brings a marble out, nothing else'):tt('बादशाह: गोटी बाहर निकालें, या 13 कदम (रास्ते में एक ही गोटी मरेगी; अपनी गोटी या एक साथ 2 गोटियाँ मारने वाली चाल नहीं चलेगी)','King: bring a marble out, or move 13 (kills at most one marble on the way; a move that would kill your own marble or 2 marbles at once is not allowed)'),Q:tt('बेगम: 12 कदम आगे','Queen: move 12'),D:tt('12 (खाली पत्ता): सिर्फ़ डिस्कार्ड। फेंकने पर सामने वाले का अपनी पसंद का एक पत्ता खींचकर बीच में फेंकें; उसकी बारी कट जाएगी और फिर आपकी ही बारी','12 (blank card): discard only. Throw it to pull any one opponent card into the middle; the opponent skips a turn and you play again'),'2':G.seats.length===2?tt('दो: गोटी बाहर निकालें, या 2 कदम आगे','Two: bring a marble out, or move 2'):tt('पत्ते के नंबर जितने कदम आगे','Move forward by the card number'),'4':tt('अपनी गोटी 4 कदम पीछे (शुरू से पीछे जाए तो सेफ ज़ोन के पास)','Move your marble 4 back (from start it goes next to the safe zone)'),'5':tt('बोर्ड की किसी भी गोटी को 5 कदम आगे (साथी/विरोधी की घर वाली गोटी नहीं चलेगी)','Move ANY marble on the board 5 forward (not partner/opponent marbles in their home lane)'),'7':tt('7: एक गोटी पूरे 7 कदम चलती है। दो गोटियों में (जैसे 4+3) तभी बाँट सकते हैं जब दूसरी गोटी के बचे कदम चलने की जगह हो','7: one marble moves all 7. Split between two marbles (e.g. 4+3) only if the second marble has room for the remaining steps'),'10':tt('आपकी मर्ज़ी: अपनी गोटी 10 कदम चलाएँ, या नीचे का बटन दबाकर डिस्कार्ड करें (अगला खिलाड़ी अपनी पसंद का एक पत्ता फेंकेगा)','Your choice: move your marble 10, or press the button below to discard (the next player discards a card of their choice)')}[k]||tt('पत्ते के नंबर जितने कदम आगे','Move forward by the card number')}
 function opt(){var k=G.card;return k==='A'?[1,11]:k==='7'?(G.rem>0?[G.rem]:[1,2,3,4,5,6,7]):[0]}
 function stepN(){var o=opt();return o.indexOf(SEL.n)>=0?SEL.n:(G.card==='7'?o[o.length-1]:o[0])}
 function tg(c,i,n){var r=G.m[c][i],e=E(),k=G.card,t;if(!k)return null;
@@ -1496,7 +1502,7 @@ window.Jack={
   var A=SEL.jf,tt2=jT(A.c,A.i).filter(function(x){return x.d===c&&x.j===i})[0];if(!tt2)return;busy=1;var who2=nm(cur()),w2=cur();
   G.m[A.c][A.i]=tt2.na;G.m[c][i]=tt2.nb;sMove();G.last=who2+': J · '+tt('गोटियाँ बदलीं','swapped marbles');
   var h2=H(w2).slice();h2.splice(h2.indexOf('J'),1);G.hand[w2]=h2;toss('J');nxt();busy=0;save();draw();return}
- WHY='';var n=stepN(),t=tg(c,i,n);if(t===null&&WHY==='safe'){note(tt('🛡️ घर (स्टार्ट) पर बैठी गोटी सुरक्षित है, उसे मार नहीं सकते','🛡️ A marble on its home (start) square is safe and cannot be captured'));return}if(t===null||!movable(n).some(function(m){return m.c===c&&m.i===i}))return;busy=1;KCAP=null;var who=nm(cur()),k=G.card;AX();var fr0=G.m[c][i];
+ WHY='';var n=stepN(),t=tg(c,i,n);if(t===null&&WHY==='safe'){note(tt('🛡️ घर (स्टार्ट) पर बैठी गोटी सुरक्षित है, उसे मार नहीं सकते','🛡️ A marble on its home (start) square is safe and cannot be captured'));return}if(t===null&&WHY==='own'){note(tt('अपनी गोटी अपनी गोटी को नहीं मार सकती','Your marble cannot capture your own marble'));return}if(t===null&&WHY==='two'){note(tt('एक चाल में 2 गोटियाँ एक साथ नहीं मारी जा सकतीं','A move cannot capture 2 marbles at once'));return}if(t===null||!movable(n).some(function(m){return m.c===c&&m.i===i}))return;busy=1;KCAP=null;var who=nm(cur()),k=G.card;AX();var fr0=G.m[c][i];
   walk(c,i,t,function(){var cp=land(c,i);if(KCAP){cp=cp||KCAP;KCAP=null}if(k==='K'&&fr0>=0){var e0=E(),q0,o9;for(q0=fr0+1;q0<=Math.min(t,e0);q0++){if(q0===e0&&fr0<e0)continue;o9=at(abs(c,q0),{c:c,i:i});if(o9){G.m[o9.c][o9.i]=-1;cp=o9;sCap()}}}var tp=tele(c,i);if(tp){var cp2=land(c,i);cp=cp||cp2;sOut()}var hm=(G.m[c][i]>E()&&G.m[c][i]!==fr0&&jsetT(c,i,G.m[c][i]));G.last=who+': '+k+' · '+(cp?tt('गोटी मारी! बोनस पत्ता + दोबारा आपकी चाल','captured a marble! bonus card + play again'):hm?tt('गोटी अंदर पूरी तरह सेट! बोनस पत्ता + दोबारा आपकी चाल','marble fully set inside! bonus card + play again'):tp?tt('तीर से दूसरी तरफ पहुँची','jumped via the arrow'):tt('चाल','move'));if(hm){sHome();conf(c,i)}var w=cur();if(cp||hm){bonusC(w);G.ag=1}if(G.seats.filter(function(x){return tm(x,w)}).every(done)){G.win=w;sWin()}else if(k==='7'&&(G.rem=(G.rem||7)-n)>0&&anyMove()){SEL={}}else{var h=H(w).slice();h.splice(h.indexOf(k),1);G.hand[w]=h;toss(k);if(G.ag){G.ag=0;G.card=null;G.rem=0;SEL={}}else nxt()}busy=0;save();draw()})},
  cr:function(ix){var m=G.chat[ix];if(!m)return;fb('POST',{by:G.names[me]||'',n:m.n,m:m.m,ts:Date.now()},'/reports').then(function(){note(tt('रिपोर्ट भेज दी गई','Report sent'))}).catch(function(){note(tt('रिपोर्ट नहीं जा सकी','Could not send report'))})},
   cb:function(ix){var m=G.chat[ix];if(!m)return;blocked[m.n]=m.n;draw();note(tt('ब्लॉक किया','Blocked'))},
@@ -1651,7 +1657,49 @@ var KF=[['🤗','प्यारी झप्पी','a warm hug',1],['❤️','
 function msL(i){var m=30,k;for(k=1;k<=i;k++)m+=30+10*k;return m}
 function nextMs(l){var i=0;while(msL(i)<l)i++;return msL(i)}
 function msIdx(l){var c=0;while(msL(c)<l)c++;return c}
-function rew(i){if(i===0)return['🌹📱🏍️🚗','फूल, फोन, बाइक और कार','a flower, a phone, a bike and a car',1];var L=ROM[cfg.rel]?KR:KF;return L[(i-1)%L.length]}
+var GFT=[['🌹','एक गुलाब','a rose',0],
+ ['❤️','दिल','a heart',0],
+ function(){return ROM[cfg.rel]?['💋','एक किस','a kiss',1]:['🥰','माथे पर प्यारी पप्पी','a kiss on the forehead',1]},
+ ['📱','एक फोन','a phone',0],
+ ['🏍️','एक बाइक','a bike',1],
+ ['🚗','एक कार','a car',1],
+ ['🏠','एक घर','a house',0],
+ ['⛵','एक नाव','a boat',1],
+ ['🏡','एक बंगला','a bungalow',0],
+ ['✈️','एक प्राइवेट प्लेन','a private plane',0],
+ ['🚤','एक स्पीडबोट','a speedboat',1],
+ ['🚁','एक हेलिकॉप्टर','a helicopter',0],
+ ['🛥️','एक लग्ज़री यॉट','a luxury yacht',1],
+ ['💍','एक हीरे की अंगूठी','a diamond ring',1],
+ ['💎','एक कीमती हीरा','a precious diamond',0],
+ ['👑','एक ताज','a crown',0],
+ ['🏰','एक महल','a palace',0],
+ ['🏝️','एक प्राइवेट आइलैंड','a private island',0],
+ ['🚀','एक रॉकेट','a rocket',0],
+ ['🛸','एक उड़नतश्तरी','a flying saucer',1],
+ ['🌍','पूरी दुनिया','the whole world',1],
+ ['🌙','चाँद','the moon',0],
+ ['⭐','एक सितारा','a star',0],
+ ['🌈','एक इंद्रधनुष','a rainbow',0],
+ ['🏆','एक ट्रॉफ़ी','a trophy',1],
+ ['🥇','एक गोल्ड मेडल','a gold medal',0],
+ ['🎸','एक गिटार','a guitar',0],
+ ['🎹','एक पियानो','a piano',0],
+ ['📷','एक कैमरा','a camera',0],
+ ['💻','एक लैपटॉप','a laptop',0],
+ ['⌚','एक घड़ी','a watch',1],
+ ['👗','एक सुंदर ड्रेस','a beautiful dress',1],
+ ['👜','एक डिज़ाइनर बैग','a designer bag',0],
+ ['🧸','एक टेडी बियर','a teddy bear',0],
+ ['🍫','ढेर सारी चॉकलेट','lots of chocolate',1],
+ ['🎂','एक बड़ा केक','a big cake',0],
+ ['🎆','आतिशबाज़ी','a fireworks show',1],
+ ['🏖️','समुद्र किनारे का बंगला','a beach house',0],
+ ['🏙️','एक पूरा शहर','a whole city',0],
+ ['🌴','एक हरा-भरा बाग़','a lush garden',0],
+ ['🌅','एक सुनहरी सुबह','a golden sunrise',1],
+ ['🌌','पूरी आकाशगंगा','the whole galaxy',1]];
+function rew(i){var g=GFT[i];if(!g)return['🎁','एक खास तोहफ़ा','a special gift',0];return typeof g==='function'?g():g}
 function giftRow(l){var c=msIdx(l),o='',i;for(i=Math.max(0,c-5);i<c;i++)o+=rew(i)[0]+' ';return o.trim()}
 var svl=1;try{svl=Math.max(1,Math.min(9999,+localStorage.getItem('sitararush-lv')||1))}catch(e){}
 var giftT=0,giftN=0,WF=null,WFo=0;
@@ -1912,7 +1960,7 @@ function draw(n,dt){
     tx(T('तुमने '+R.a+' '+R.h+' को बचा लिया!','You saved your '+R.en+'!'),cx,y0+40,18,700,'#7dffb2');
     person(cx,y0+92,1.5,SP[cfg.rel],'happy',n);
     var W0=rew(0);g.textAlign='center';g.textBaseline='middle';g.fillStyle='#fff';fit(W0[0],W-30,40,400);g.fillText(W0[0],cx,y0+170);
-    tx(T(R.h+' ने तुम्हें '+W0[1]+' दी!','Your '+R.en+' gave you '+W0[2]+'!'),cx,y0+204,16,800,'#7dffb2');
+    tx(T(R.h+' ने तुम्हें '+W0[1]+(W0[3]?' दी!':' दिया!'),'Your '+R.en+' gave you '+W0[2]+'!'),cx,y0+204,16,800,'#7dffb2');
     tx(T('अंक','Score')+' '+score+'  ·  '+T('सर्वश्रेष्ठ','Best')+' '+best,cx,y0+232,16,700,'#f4f6ff');
     button('cont','▶ '+T('लेवल '+svl+' से शुरू करें','Start from Level '+svl),cx,H-70,Math.min(W-40,310),50,'#ffd166');
    }else if(phase==='over'){
