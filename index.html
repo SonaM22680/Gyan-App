@@ -103,6 +103,18 @@ details.hd[open]>summary{border-bottom-left-radius:0;border-bottom-right-radius:
 .cb .ct{flex:1;line-height:1.3}.cb .ct small{display:block;font-size:12px;font-weight:700;opacity:.65;margin-bottom:1px}.cb .ct b{font-size:15.5px;font-weight:700}
 .hbar{height:6px;border-radius:3px;background:rgba(255,255,255,.3);margin:10px 0 4px;position:relative;z-index:1;overflow:hidden}.hbar i{display:block;height:100%;background:#fff;border-radius:3px}
 .pnv{display:flex;gap:8px;margin:12px 0}.pnv .btn{margin:0;padding:10px 8px;font-size:14px}
+.gzw{display:flex;gap:6px;margin:12px 0}.gzw>div{flex:1;text-align:center;font-size:12px}.gzd{width:34px;height:34px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:16px;margin:0 auto 2px}.gzd.on{background:var(--gold);border-color:var(--gold)}.gzb{flex:1;text-align:center;border:2px solid var(--line);border-radius:12px;padding:10px 4px}.gzb.on{border-color:var(--gold);background:rgba(183,121,31,.14)}.gzb.off{opacity:.5;filter:grayscale(1)}
+.gzh{background:#0b1020;border-radius:26px;padding:14px;color:#e8edf8;margin:6px 0}.gzhd{display:flex;justify-content:space-between;align-items:center;margin:2px 4px 12px;font-weight:800;font-size:17px}
+.gzg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gzt{position:relative;text-align:left;background:#111a30;border:2px solid var(--tc,#223256);border-radius:20px;padding:12px;color:#fff;font:inherit;display:block;width:100%;min-width:0;overflow:hidden}.gzt:active{transform:scale(.97)}
+.gzt .gzti{position:absolute;top:10px;right:12px;font-size:20px}
+.gzt .gzpv{display:flex;align-items:center;justify-content:center;margin:24px 0 8px;min-height:58px;border-radius:12px;background:#0b1224;border:1px solid #1d2a4a}
+.gzt b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gzt small{display:block;opacity:.65;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gzt.sp{grid-column:1/-1;justify-self:center;width:64%;text-align:center}.gzt.sp .gzti{display:none}.gzt.sp .gzpv{margin-top:6px}
+.gzt.sp.on{animation:gzglow 1.6s ease-in-out infinite}@keyframes gzglow{0%,100%{box-shadow:0 0 0 rgba(244,180,0,0)}50%{box-shadow:0 0 18px rgba(244,180,0,.7)}}
+.gzt.wide{grid-column:1/-1}.gzbd{display:inline-block;margin-top:6px;padding:2px 10px;border-radius:12px;background:rgba(244,180,0,.14);color:#ffd54a;font-size:12px;font-weight:700}
+.gzp{display:flex;gap:6px}.gzp i{display:block;width:16px;height:16px;border-radius:50%}.gzdt{display:block;width:8px;height:8px;border-radius:50%}
+.gzch{display:grid;grid-template-columns:repeat(4,22px);gap:2px}.gzch i{height:22px;background:#162040;font-style:normal;font-size:15px;text-align:center;line-height:22px;color:#fff}
 </style>
 </head>
 <body class="notranslate" translate="no">
@@ -1159,7 +1171,7 @@ function movList(c){var r=[];for(var i=0;i<4;i++)if(mov(c,i))r.push(i);return r}
 function fresh(pl,mode){var t={};COL.forEach(function(c){t[c]=[-1,-1,-1,-1]});return{mode:mode,pl:pl,names:{},t:t,turn:0,d:0,rolled:false,win:null,chat:[],ver:0,q:'',xe:0}}
 var DR={x:0,y:0},SPU=0,OPN=0,ST={m:0,w:0,c:100};
 try{var _o=JSON.parse(localStorage.getItem('gy_ludo_st')||'{}')||{};ST.m=+_o.m||0;ST.w=+_o.w||0;ST.c=_o.c!=null?(+_o.c||0):100}catch(e){}
-function stSave(){try{localStorage.setItem('gy_ludo_st',JSON.stringify(ST))}catch(e){}}
+function stSave(){try{localStorage.setItem('gy_ludo_st',JSON.stringify(ST))}catch(e){}}window.gyAddCoins=function(n){ST.c+=n;stSave();var e=$('ldcoin');if(e)e.textContent=ST.c};window.gyCoins=function(){return ST.c};
 function lvl(){return 1+Math.floor((ST.m*10+ST.w*20)/50)}
 function recG(){if(!G||!G.win||G.rec)return;G.rec=1;ST.m++;ST.c+=5;if(G.mode==='offline'?G.win==='red':G.win===me){ST.w++;ST.c+=20}stSave();var e=$('ldcoin');if(e)e.textContent=ST.c}
 var FACE={1:[0,0],2:[-90,0],3:[0,-90],4:[0,90],5:[90,0],6:[0,180]};
@@ -1764,7 +1776,7 @@ function speak(s,R){
 function say(s){bub=s;bubT=4.5;speak(s,REL[cfg.rel])}
 function plea(){var L=REL[cfg.rel].p(nm(),cfg.male);say(L[pi++%L.length])}
 function rs(){var b=cv.getBoundingClientRect();if(!b.width)return;W=b.width;H=b.height;cv.width=W*dpr;cv.height=H*dpr;g.setTransform(dpr,0,0,dpr,0,0);S=Math.min(W,H*.6)/400}
-function reset(nw){if(nw){svl=1;saveLv()}lv=svl;score=(lv-1)*PL;lives=2;banner=1.2;items=[];fx=[];ft=[];spawn=0;exT=0;t=0;won=false;msg=null;inv=0;revN=0;pi=0;combo=0;comboT=0;flash=0;danger=0;P.x=P.tx=W/2;P.y=P.ty=H*.75;phase='play';run=true;plea()}
+function reset(nw){if(nw){svl=1;saveLv()}lv=svl;score=(lv-1)*PL;lives=2+(window.gyTakeLife?window.gyTakeLife():0);banner=1.2;items=[];fx=[];ft=[];spawn=0;exT=0;t=0;won=false;msg=null;inv=0;revN=0;pi=0;combo=0;comboT=0;flash=0;danger=0;P.x=P.tx=W/2;P.y=P.ty=H*.75;phase='play';run=true;plea()}
 function end(m,w){run=false;over=performance.now();msg=m;won=!!w;phase=w?'win':'over';if(score>best){best=score;try{localStorage.setItem('sitararush-best',best)}catch(e){}}}
 var ADMAX=2;
 function adDay(){var d=new Date(),k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(),o={d:k,n:0};try{var j=JSON.parse(localStorage.getItem('sitararush-ads')||'null');if(j&&j.d===k)o.n=+j.n||0}catch(e){}return o}
@@ -3816,6 +3828,238 @@ function sciTopics(){
   +'<div class="card" style="padding:10px 12px"><button class="opt" onclick="startQuiz(\'science\')">🔬 '+T('सभी विज्ञान प्रश्न – मिश्रित क्विज़','All Science – mixed quiz')+' <span class="muted">· '+all+' '+T('सवाल','Qs')+'</span></button></div>'
   +SCI.map(glRow).join('')}
 
+
+// ===== रिवीजन टैब: रिवीजन लिस्ट + विषय रिपोर्ट + स्ट्रीक/बैज; Games में Quiz 1v1 (बॉट/ऑनलाइन + जश्न) =====
+;(function(){
+var BDG=[{ic:'🥉',d:7,h:'ब्रॉन्ज़',e:'Bronze'},{ic:'🥈',d:30,h:'सिल्वर',e:'Silver'},{ic:'🥇',d:100,h:'गोल्ड',e:'Gold'}];
+var BN=['Aarav','Vivaan','Kabir','Rohan','Arjun','Ishaan','Dev','Yash','Kavya','Riya','Anaya','Diya'];
+var WKH=['रवि','सोम','मंगल','बुध','गुरु','शुक्र','शनि'],WKE=['Su','Mo','Tu','We','Th','Fr','Sa'];
+function ld(k,df){try{var s=localStorage.getItem(k);return s?JSON.parse(s):df}catch(e){return df}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function dk(d){d=d||new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function ago(n){var d=new Date();d.setDate(d.getDate()-n);return dk(d)}
+var STK=ld('gy_streak',null)||{n:0,best:0,last:'',days:[]},STA=ld('gy_stat',null)||{},REV=ld('gy_rev',null)||[],VSR=ld('gy_vs',null)||{w:0,l:0,d:0};
+if(!Array.isArray(STK.days))STK.days=[];if(!Array.isArray(REV))REV=[];
+
+/* ---------- 1) स्ट्रीक और बैज ---------- */
+function curStreak(){return(STK.last===dk()||STK.last===ago(1))?STK.n:0}
+function touch(){var t=dk();if(STK.last===t)return;STK.n=(STK.last===ago(1))?STK.n+1:1;STK.last=t;if(STK.n>STK.best)STK.best=STK.n;STK.days.push(t);STK.days=STK.days.slice(-60);sv('gy_streak',STK);
+ var b=BDG.filter(function(x){return x.d===STK.n})[0];
+ try{note(b?b.ic+' '+T('बधाई! '+b.h+' बैज मिला','Congrats! '+b.e+' badge unlocked'):'🔥 '+T(STK.n+' दिन की स्ट्रीक!',STK.n+'-day streak!'))}catch(e){}}
+
+/* ---------- 3) गलत सवालों की रिवीजन लिस्ट + विषय आँकड़े ---------- */
+function cp(q){return{k:gsvKey(q),c:q.c||'',t:q.t||'',s:q.s||'',q:q.q,o:q.o.slice(),a:q.a,e:q.e||''}}
+function revAdd(q){var it=cp(q),i=-1;REV.forEach(function(x,n){if(x.k===it.k)i=n});if(i>=0){it.n=(REV[i].n||1)+1;REV.splice(i,1)}else it.n=1;it.ts=Date.now();it.lp=0;REV.unshift(it);if(REV.length>300)REV.length=300;sv('gy_rev',REV)}
+function revMiss(q){var k=gsvKey(q),f=REV.filter(function(x){return x.k===k})[0];if(f){f.n=(f.n||1)+1;f.lp=Date.now();sv('gy_rev',REV)}else revAdd(q)}
+function revDel(q){var k=gsvKey(q),n=REV.length;REV=REV.filter(function(x){return x.k!==k});if(REV.length!==n)sv('gy_rev',REV)}
+function rec(q,ok,mode){try{if(!q||!Array.isArray(q.o))return;touch();var c=q.c||'other',a=STA[c]||(STA[c]=[0,0]);a[ok?0:1]++;sv('gy_stat',STA);
+ if(mode==='rev'){if(ok)revDel(q);else revMiss(q)}else if(!ok)revAdd(q)}catch(e){}}
+
+/* हुक: क्विज़, प्रैक्टिस पेपर, मासिक परीक्षा के हर जवाब से स्ट्रीक/आँकड़े/रिवीजन अपने आप अपडेट */
+var _ans=ans;ans=function(k){var was=S.locked,q=S.qs&&S.qs[S.i];_ans(k);if(was||!q)return;rec(q,k===q.a,S.cat==='rev'?'rev':'')};
+var _pSub=pSubmit;pSubmit=function(){var was=P&&!P.done;_pSub();if(was&&P&&P.done&&!P.gyr){P.gyr=1;P.qs.forEach(function(q,i){var a=P.ans[i];if(a>=0)rec(q,a===q.a)})}};
+var _exG=exGrade;exGrade=function(P0){var r=_exG(P0);try{if(P0&&!P0.gyr){P0.gyr=1;P0.qs.forEach(function(q,i){var a=P0.ans[i];if(a>=0)rec(q,a===q.a)});exPut(exCur(),P0)}}catch(e){}return r};
+
+/* रोज़ 10 पुराने गलत सवाल दोबारा */
+function revGo(){var L=REV.slice().sort(function(a,b){return(a.lp||0)-(b.lp||0)||(b.ts-a.ts)}).slice(0,10);
+ if(!L.length){note(T('रिवीजन लिस्ट खाली है','Revision list is empty'));return}
+ var qs=L.map(function(it){var ix=shuffle(it.o.map(function(_,i){return i})),r={c:it.c,t:it.t,s:it.s,q:it.q,e:it.e};r.o=ix.map(function(i){return it.o[i]});r.a=ix.indexOf(it.a);return r});
+ try{history.pushState({},'')}catch(e){}
+ LQ=null;tab='quiz';S={cat:'rev',i:0,score:0,right:0,wrong:0,skip:0,done:false,locked:false,sel:-1,timeout:false,qs:qs,mock:'',rqn:'',rqi:''};render();window.scrollTo(0,0)}
+var _sq3=startQuiz;startQuiz=function(c){SK=false;if(c==='rev'){revGo();return}return _sq3.apply(this,arguments)};
+window.gzRevGo=revGo;
+
+/* क्विज़ पेज: ऊपर स्ट्रीक पट्टी, रिवीजन क्विज़ का शीर्षक/नतीजा */
+function banner(){var cs=curStreak(),n=REV.length,td=STK.last===dk();
+ var t=cs>0?'🔥 '+T(cs+' दिन की स्ट्रीक',cs+'-day streak'):'🔥 '+T('स्ट्रीक शुरू करें','Start your streak');
+ var s=(td?'✅ '+T('आज का हो गया','Done for today'):T('आज कुछ खेलें, स्ट्रीक बचाएँ','Play today to keep it'))+(n?' · 🔁 '+n+' '+T('रिवीजन','to revise'):'');
+ return '<div><button class="row" onclick="gzOpenStreak()"><span class="ic">🔥</span><span class="tt"><b>'+t+'</b><small>'+s+'</small></span><span class="chev">&#8250;</span></button></div>'}
+var _quiz=quiz;quiz=function(){if(SK&&(!S.qs||!S.qs.length)&&!NAV.v&&!P&&!LQ)return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><button class="lang" onclick="gzSkBack()">‹ '+T('वापस','Back')+'</button><b>🔥 '+T('स्ट्रीक और बैज','Streak & badges')+'</b></div>'+streakView();var h=_quiz();try{
+ var home=(!S.qs||!S.qs.length)&&!NAV.v&&!P&&!LQ;
+ if(home)h=banner()+h;
+ else if(S.cat==='rev'&&S.qs&&S.qs.length){if(S.done)h=h.replace('</div>','<p class="muted">🔁 '+T('रिवीजन लिस्ट में अब बचे: ','Left in revision list: ')+REV.length+'</p></div>');else h='<h2>🔁 '+T('रिवीजन · पुराने गलत सवाल','Revision · past mistakes')+'</h2>'+h}
+}catch(e){}return h};
+
+/* ---------- Games में Quiz 1v1: बॉट (ऑफ़लाइन) या दोस्त के साथ (ऑनलाइन), जीतने पर जश्न ---------- */
+var QV={st:'menu',mode:'bot',cat:'mix',lv:'med'};
+function vsOk(q){return q&&Array.isArray(q.o)&&q.o.length>1&&typeof q.a==='number'&&q.o[q.a]!==undefined&&!q.dup}
+function myName(){var a=window.GYX&&GYX.au&&GYX.au();return(a&&a.name)||ld('gy_qzn','')||''}
+function qOpen(){return tab==='games'&&window.ludoIsOpen&&window.ludoIsOpen()===5}
+function qfb(m,b,p){var X=window.GYX;if(!X||!X.db)return Promise.reject(0);return X.aTok().then(function(t){return fetch(X.db+'/ludo/QZ'+QV.code+(p||'')+'.json'+(t?'?auth='+encodeURIComponent(t):''),{method:m,body:b!==undefined?JSON.stringify(b):undefined}).then(function(r){if(!r.ok)throw 0;return r.json()})})}
+function qReset(){clearInterval(QV.pl);QV={st:'menu',mode:'bot',cat:QV.cat||'mix',lv:QV.lv||'med'}}
+function qExit(){clearInterval(QV.pl);if(QV.mode==='online'&&QV.role==='h'&&QV.code&&QV.st!=='done')qfb('DELETE').catch(function(){});qReset()}
+function qBuild(bot){var cat=QV.cat,pool=cat==='mix'?shuffle(QUESTIONS.filter(vsOk)).slice(0,10):fresh(SEL(cat).filter(vsOk),10);
+ if(pool.length<5){note(T('इस विषय में अभी कम सवाल हैं','Not enough questions in this subject'));return null}
+ var p={easy:.5,med:.72,hard:.9}[QV.lv]||.7;
+ return pool.map(function(q){var ix=shuffle(q.o.map(function(_,i){return i})),r={c:q.c,t:q.t,s:q.s,q:q.q,e:q.e};r.o=ix.map(function(i){return q.o[i]});r.a=ix.indexOf(q.a);
+  if(bot){var bk=r.a;if(Math.random()>=p){var w=[];r.o.forEach(function(_,i){if(i!==r.a)w.push(i)});bk=w[Math.floor(Math.random()*w.length)]}r.bk=bk}return r})}
+function qRender(){if(qOpen())render()}
+function oppCount(){return QV.oa?String(QV.oa).split(',').length:0}
+function celeb(){try{if(!window.gyCeleb||!QV.res||QV.res==='d')return;var me=QV.res==='w',nm=me?'':String(QV.on||'').trim();window.gyCeleb({box:1,title:me?T('आप जीत गए!','You win!'):nm+T(' जीत गया!',' wins!'),sub:T('बहुत बधाई हो! शानदार खेल 👏','Congratulations! What a game 👏'),ok:T('ठीक है','OK'),color:me?'#ffd54a':'#f4f1e8',pop:function(){try{if(GYX.snd())GYX.tone(0,260,.07,.2)}catch(e){}},fan:function(){try{if(GYX.snd())[523,659,784,1047,784,1047,1319].forEach(function(f,q){GYX.tone(q*.16,f,.3,.14)})}catch(e){}}})}catch(e){}}
+function finish(){clearInterval(QV.pl);if(QV.mode==='online'){var s=0;String(QV.oa||'').split(',').forEach(function(v,i){if(QV.qs[i]&&+v===QV.qs[i].a)s++});QV.opp=s}
+ QV.st='done';var r=QV.me>QV.opp?'w':QV.me<QV.opp?'l':'d';QV.res=r;VSR[r]++;sv('gy_vs',VSR);
+ if(QV.mode==='online'&&QV.role==='h')setTimeout(function(){qfb('DELETE').catch(function(){})},20000);
+ qRender();window.scrollTo(0,0);if(r!=='d')celeb()}
+function qPoll(){clearInterval(QV.pl);QV.pl=setInterval(function(){if(QV.mode!=='online'||QV.st==='done'||QV.st==='menu'){clearInterval(QV.pl);return}
+ qfb('GET').then(function(r){if(!r){QV.gone=1;return}var ch=0;
+  if(QV.role==='h'&&QV.st==='lobby'&&r.g){QV.on=String(r.g);QV.st='play';ch=1}
+  var oa=(QV.role==='h'?r.ag:r.ah)||'';if(oa!==QV.oa){QV.oa=oa;ch=1}
+  if(QV.st==='wait'&&oppCount()>=QV.qs.length){finish();return}
+  if(ch)qRender()}).catch(function(){})},1500)}
+window.gzqSet=function(k,v){QV[k]=v;qRender()};
+window.gzqMenu=function(){qExit();qRender();window.scrollTo(0,0)};
+window.gzqBot=function(){var qs=qBuild(true);if(!qs)return;var c=QV.cat,l=QV.lv;QV={st:'play',mode:'bot',cat:c,lv:l,qs:qs,i:0,me:0,opp:0,sel:-1,lock:false,on:BN[Math.floor(Math.random()*BN.length)]+' 🤖'};qRender();window.scrollTo(0,0)};
+window.gzqCreate=function(){var nm=((document.getElementById('qzn')||{}).value||'').trim().slice(0,14)||'Player';sv('gy_qzn',nm);var qs=qBuild(false);if(!qs)return;
+ var code=Math.random().toString(36).slice(2,8).toUpperCase(),c=QV.cat,l=QV.lv;QV={st:'lobby',mode:'online',role:'h',code:code,name:nm,cat:c,lv:l,qs:qs,i:0,me:0,opp:0,sel:-1,lock:false,my:[],oa:'',on:''};
+ qfb('PUT',{cat:c,qs:qs,h:nm,g:'',ah:'',ag:'',ts:Date.now()}).then(function(){qPoll();qRender()}).catch(function(){note(T('ऑनलाइन कनेक्शन नहीं बना','Could not connect online'));QV.st='menu';QV.mode='bot';qRender()});qRender()};
+window.gzqJoin=function(){var nm=((document.getElementById('qzn')||{}).value||'').trim().slice(0,14)||'Player',code=((document.getElementById('qzc')||{}).value||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');if(!code)return;sv('gy_qzn',nm);
+ var c=QV.cat,l=QV.lv;QV={st:'menu',mode:'online',role:'g',code:code,name:nm,cat:c,lv:l,my:[],oa:''};
+ qfb('GET').then(function(r){if(!r||!r.qs){note(T('रूम नहीं मिला','Room not found'));QV.mode='bot';qRender();return}
+  if(r.g){note(T('रूम भर चुका है','Room is full'));QV.mode='bot';qRender();return}
+  return qfb('PATCH',{g:nm},'').then(function(){QV.qs=r.qs;QV.i=0;QV.me=0;QV.opp=0;QV.sel=-1;QV.lock=false;QV.on=String(r.h||'');QV.st='play';qPoll();qRender();window.scrollTo(0,0)})}).catch(function(){note(T('ऑनलाइन कनेक्शन नहीं बना','Could not connect online'));QV.mode='bot';qRender()});};
+window.gzqAns=function(k){if(QV.st!=='play'||QV.lock)return;var q=QV.qs[QV.i],ok=k===q.a;QV.lock=true;QV.sel=k;if(ok)QV.me++;
+ if(QV.mode==='bot'){if(q.bk===q.a)QV.opp++}else{QV.my.push(k);qfb('PUT',QV.my.join(','),'/a'+QV.role).catch(function(){})}
+ rec(q,ok,'vs');qRender()};
+window.gzqNext=function(){if(QV.i+1<QV.qs.length){QV.i++;QV.lock=false;QV.sel=-1;qRender();window.scrollTo(0,0);return}
+ if(QV.mode==='bot'||oppCount()>=QV.qs.length)finish();else{QV.st='wait';qRender();window.scrollTo(0,0)}};
+window.gzqShare=function(){var t=T('Quiz 1v1 में मेरे साथ खेलो! रूम कोड: ','Play Quiz 1v1 with me! Room code: ')+QV.code;if(navigator.share)navigator.share({text:t}).catch(function(){});else if(navigator.clipboard){navigator.clipboard.writeText(t);note(T('कोड कॉपी हो गया','Code copied'))}};
+function chip(on,oc,tx){return '<button class="lang" style="margin:4px;'+(on?'background:var(--acc);color:var(--onacc);border-color:var(--acc)':'')+'" onclick="'+oc+'">'+tx+'</button>'}
+function rcd(){return T('रिकॉर्ड','Record')+': '+VSR.w+' '+T('जीत','W')+' · '+VSR.l+' '+T('हार','L')+' · '+VSR.d+' '+T('बराबरी','D')}
+function qView(){var bar='<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><button class="lang" onclick="ludoBack()">‹ '+T('वापस','Back')+'</button><b>⚔️ Quiz 1v1</b></div>',h=bar+qlBtn();
+ if(QV.st==='menu'){
+  var subs=[['mix','🎲',T('सब मिलाकर','Mixed')]].concat(CATS.filter(function(c){return !MOCK[c[0]]&&cnt(c[0])>=10}).map(function(c){return[c[0],c[1],pick(c[2])]}));
+  var lvs=[['easy','😊',T('आसान','Easy')],['med','😎',T('मध्यम','Medium')],['hard','🔥',T('कठिन','Hard')]];
+  return h+'<div class="card"><p class="muted">'+T('10 सवाल, जिसके ज़्यादा सही वो जीतेगा। जीतने पर जश्न! इसमें कोई पैसा या इनाम नहीं है।','10 questions; whoever gets more right wins. Celebration for the winner! No money or prizes involved.')+'</p><p><b>'+T('विषय चुनें','Pick a subject')+'</b></p><div>'+subs.map(function(s){return chip(QV.cat===s[0],"gzqSet('cat','"+s[0]+"')",s[1]+' '+s[2])}).join('')+'</div><p class="muted">'+rcd()+'</p></div>'
+  +'<div class="card"><h3>🤖 '+T('बॉट के साथ (ऑफलाइन)','Vs bot (offline)')+'</h3><div>'+lvs.map(function(s){return chip(QV.lv===s[0],"gzqSet('lv','"+s[0]+"')",s[1]+' '+s[2])}).join('')+'</div><button class="btn" onclick="gzqBot()">⚔️ '+T('बॉट से खेलें','Play the bot')+'</button></div>'
+  +'<div class="card"><h3>🌐 '+T('दोस्त के साथ (ऑनलाइन)','With a friend (online)')+'</h3><input id="qzn" maxlength="14" placeholder="'+T('अपना नाम लिखें','Enter your name')+'" value="'+esc2(QV.name||myName())+'"><button class="btn" onclick="gzqCreate()">'+T('रूम बनाएँ','Create room')+'</button><input id="qzc" maxlength="8" placeholder="'+T('रूम कोड','Room code')+'" style="margin-top:8px"><button class="btn ghost" onclick="gzqJoin()">'+T('रूम में जुड़ें','Join room')+'</button><p class="muted">'+T('दोनों खिलाड़ियों को एक ही 10 सवाल मिलते हैं।','Both players get the same 10 questions.')+'</p></div>'}
+ if(QV.st==='lobby')return h+'<div class="card" style="text-align:center"><p class="muted">'+T('रूम कोड','Room code')+'</p><div class="big" style="font-size:44px;letter-spacing:4px">'+QV.code+'</div><p>⏳ '+T('दोस्त के जुड़ने का इंतज़ार है…','Waiting for your friend to join…')+'</p><button class="btn" onclick="gzqShare()">📤 '+T('कोड भेजें','Share code')+'</button><button class="btn ghost" onclick="gzqMenu()">'+T('रद्द करें','Cancel')+'</button></div>';
+ if(QV.st==='wait')return h+'<div class="card" style="text-align:center"><div class="big" style="font-size:44px">⏳</div><h2>'+T('आपके सवाल पूरे!','You finished!')+'</h2><p>'+T('आपके सही: ','Your correct: ')+'<b>'+QV.me+'</b> / '+QV.qs.length+'</p><p class="muted">'+esc2(QV.on)+': '+oppCount()+'/'+QV.qs.length+' '+T('सवाल हो चुके','answered')+'</p><p class="muted">'+T('दोस्त के खत्म करते ही नतीजा आएगा।','The result appears when your friend finishes.')+'</p><button class="btn ghost" onclick="gzqMenu()">'+T('बाहर जाएँ','Leave')+'</button></div>';
+ if(QV.st==='done'){var r=QV.res,tt=r==='w'?T('आप जीत गए!','You won!'):r==='l'?T('इस बार '+QV.on+' जीता',QV.on+' won this time'):T('बराबरी रही','It is a draw');
+  return h+'<div class="card" style="text-align:center"><div class="big" style="font-size:56px">'+(r==='w'?'🏆':r==='l'?'😅':'🤝')+'</div><h2>'+tt+'</h2><p>👤 '+T('आप','You')+': <b>'+QV.me+'</b> · '+esc2(QV.on)+': <b>'+QV.opp+'</b> / '+QV.qs.length+'</p><p class="muted">'+rcd()+'</p><p class="muted">🔁 '+T('गलत सवाल रिवीजन टैब में जुड़ गए','Wrong answers were added to the Revision tab')+'</p>'+(r!=='d'?'<button class="btn ghost" onclick="gzqCel()">🎉 '+T('जश्न फिर से देखें','Celebrate again')+'</button>':'')+'<button class="btn" onclick="gzqMenu()">'+T('नया मुक़ाबला','New match')+'</button></div>'}
+ var q=QV.qs[QV.i],bot=QV.mode==='bot';
+ h+='<div class="card"><div style="display:flex;justify-content:space-around;text-align:center"><div><div class="muted">👤 '+T('आप','You')+'</div><div class="big" style="font-size:40px">'+QV.me+'</div></div><div class="big" style="font-size:24px;align-self:center">VS</div><div><div class="muted">'+esc2(QV.on)+'</div>'+(bot?'<div class="big" style="font-size:40px">'+QV.opp+'</div>':'<div class="big" style="font-size:28px;line-height:40px">'+oppCount()+'/'+QV.qs.length+'</div>')+'</div></div><div class="bar" style="margin-top:8px"><i style="width:'+(QV.i/QV.qs.length*100)+'%"></i></div><p class="muted">'+T('सवाल','Question')+' '+(QV.i+1)+'/'+QV.qs.length+'</p></div><h2>'+pick(q.q)+'</h2>';
+ q.o.forEach(function(o,k){var c='opt';if(QV.lock){if(k===q.a)c+=' good';else if(k===QV.sel)c+=' bad'}h+='<button class="'+c+'" onclick="gzqAns('+k+')">'+pick(o)+'</button>'});
+ if(QV.lock){if(bot)h+='<div class="card"><b>'+esc2(QV.on)+'</b>: '+(q.bk===q.a?'✅ '+T('सही जवाब दिया','answered correctly'):'❌ '+T('गलत जवाब दिया','answered wrong'))+'<p class="muted">'+T('बॉट ने चुना: ','Bot chose: ')+pick(q.o[q.bk])+'</p></div>';
+  if(q.e)h+='<div class="card"><b>💡 '+T('जवाब के बारे में','About the answer')+'</b><p>'+pick(q.e)+'</p></div>';
+  h+='<button class="btn" onclick="gzqNext()">'+(QV.i+1<QV.qs.length?T('अगला सवाल','Next'):T('नतीजा देखें','See result'))+'</button>'}
+ h+='<button class="btn ghost" onclick="ludoBack()">'+T('मुक़ाबला छोड़ें','Leave match')+'</button>';
+ return h}
+window.gzqCel=celeb;
+/* ---------- Games हब (कोनों वाला डिज़ाइन) + 🎡 Lucky Spin (रोज़ एक बार) ---------- */
+var TH=[{id:'royal',n:['रॉयल','Royal'],hd:'#3B0764',ac:'#4A1275',ad:'#B58CFF',ic:'👑'},{id:'ocean',n:['ओशन','Ocean'],hd:'#0b4f6c',ac:'#0b6f99',ad:'#6cc8f0',ic:'🌊'},{id:'sunset',n:['सनसेट','Sunset'],hd:'#9a3412',ac:'#c2410c',ad:'#fdba74',ic:'🌅'},{id:'forest',n:['फ़ॉरेस्ट','Forest'],hd:'#14532d',ac:'#15803d',ad:'#86efac',ic:'🌿'},{id:'rose',n:['रोज़','Rose'],hd:'#9d174d',ac:'#be185d',ad:'#f9a8d4',ic:'🌹'}];
+var SEG=[{k:'c',v:10},{k:'c',v:25},{k:'t'},{k:'c',v:15},{k:'l'},{k:'c',v:50},{k:'c',v:20},{k:'c',v:100}],WT=[22,18,10,22,12,8,16,2];
+var SPN={rot:0,busy:false,pend:null,res:null};
+function ldSpin(){var s=ld('gy_spin',null)||{};if(!Array.isArray(s.themes)||!s.themes.length)s.themes=['royal'];s.life=+s.life||0;s.th=s.th||'royal';return s}
+function svSpin(s){sv('gy_spin',s)}
+function coins(){try{if(window.gyCoins)return window.gyCoins()}catch(e){}var o=ld('gy_ludo_st',{})||{};return o.c!=null?+o.c||0:100}
+function addCoins(n){try{if(window.gyAddCoins){window.gyAddCoins(n);return}}catch(e){}var o=ld('gy_ludo_st',{})||{};o.c=(o.c!=null?+o.c||0:100)+n;sv('gy_ludo_st',o)}
+function applyTheme(id){var t=TH.filter(function(x){return x.id===id})[0]||TH[0],st=document.getElementById('gyth');if(!st){st=document.createElement('style');st.id='gyth';document.head.appendChild(st)}
+ st.textContent=t.id==='royal'?'':':root:root:root{--hd:'+t.hd+';--acc:'+t.ac+'}@media (prefers-color-scheme:dark){:root:root:root:not([data-theme="light"]){--acc:'+t.ad+';--hd:'+t.hd+'}}:root[data-theme="dark"]:root{--acc:'+t.ad+';--hd:'+t.hd+'}'}
+applyTheme(ldSpin().th);
+window.gyTakeLife=function(){var s=ldSpin();if(s.life>0){s.life--;svSpin(s);try{note('💖 '+T('स्पिन का एक्स्ट्रा लाइफ मिला','Spin bonus life added'))}catch(e){}return 1}return 0};
+function spOpen(){return tab==='games'&&window.ludoIsOpen&&window.ludoIsOpen()===6}
+function pickSeg(){var r=Math.random()*WT.reduce(function(a,b){return a+b},0);for(var i=0;i<WT.length;i++){r-=WT[i];if(r<0)return i}return 0}
+function rtxt(r){return r.k==='c'?'🪙 '+r.v+' '+T('कॉइन्स','coins')+(r.conv?' ('+T('सारी थीम खुल चुकी हैं','all themes unlocked')+')':''):r.k==='t'?'🎨 '+T('नई थीम: ','New theme: ')+r.th.ic+' '+T(r.th.n[0],r.th.n[1]):'💖 '+T('Sitara Rush का एक्स्ट्रा लाइफ','Extra life for Sitara Rush')}
+function spCeleb(r){try{if(!window.gyCeleb)return;window.gyCeleb({box:1,title:rtxt(r),sub:T('आज का इनाम मुबारक! कल फिर घुमाइए 🎡','Congrats on today\'s reward! Spin again tomorrow 🎡'),ok:T('ठीक है','OK'),color:'#ffd54a',pop:function(){try{if(GYX.snd())GYX.tone(0,260,.07,.2)}catch(e){}},fan:function(){try{if(GYX.snd())[523,659,784,1047,784,1047,1319].forEach(function(f,q){GYX.tone(q*.16,f,.3,.14)})}catch(e){}}})}catch(e){}}
+function spDone(){clearTimeout(SPN.tm);if(!SPN.busy)return;SPN.busy=false;SPN.rot=SPN.fin%360;SPN.res=SPN.pend;return SPN.pend}
+window.gzSpin=function(){var s=ldSpin();if(SPN.busy||s.last===dk())return;var k=pickSeg(),sg=SEG[k],res={k:sg.k,v:sg.v};
+ if(sg.k==='t'){var lk=TH.filter(function(x){return s.themes.indexOf(x.id)<0});if(lk.length){var th=lk[Math.floor(Math.random()*lk.length)];s.themes.push(th.id);res={k:'t',th:th}}else res={k:'c',v:30,conv:1}}
+ if(res.k==='c')addCoins(res.v);if(res.k==='l')s.life++;s.last=dk();svSpin(s);
+ var fin=Math.ceil(SPN.rot/360)*360+360*5+(360-(k*45+22.5))+(Math.random()*24-12);SPN.busy=true;SPN.res=null;SPN.pend=res;SPN.fin=fin;
+ var el=document.getElementById('gzwh');if(el){el.style.transition='transform 4.4s cubic-bezier(.12,.7,.15,1)';el.style.transform='rotate('+fin+'deg)'}
+ var b=document.getElementById('gzsb');if(b){b.disabled=true;b.textContent='…'}
+ SPN.tm=setTimeout(function(){var r=spDone();if(spOpen())render();if(r)spCeleb(r)},4600)};
+window.gzTheme=function(id){var s=ldSpin();if(s.themes.indexOf(id)<0)return;s.th=id;svSpin(s);applyTheme(id);render()};
+function wheelSvg(){var p='',i,R=92;for(i=0;i<8;i++){var a0=(i*45-90)*Math.PI/180,a1=((i+1)*45-90)*Math.PI/180;
+  p+='<path d="M100 100 L'+(100+R*Math.cos(a0)).toFixed(2)+' '+(100+R*Math.sin(a0)).toFixed(2)+' A'+R+' '+R+' 0 0 1 '+(100+R*Math.cos(a1)).toFixed(2)+' '+(100+R*Math.sin(a1)).toFixed(2)+' Z" fill="'+(i%2?'#1a2540':'#2a3a66')+'" stroke="#f4b400" stroke-width="1.2"/>';
+  var lb=SEG[i].k==='c'?'🪙'+SEG[i].v:SEG[i].k==='t'?'🎨':'💖';p+='<text transform="rotate('+(i*45+22.5)+' 100 100)" x="100" y="36" text-anchor="middle" font-size="13" fill="#ffd54a" font-weight="700">'+lb+'</text>'}
+ return '<svg viewBox="0 0 200 200" width="270" style="max-width:100%;display:block;margin:0 auto"><circle cx="100" cy="100" r="97" fill="none" stroke="#f4b400" stroke-width="4"/><g id="gzwh" style="transform-box:view-box;transform-origin:100px 100px;transform:rotate('+SPN.rot+'deg)">'+p+'</g><circle cx="100" cy="100" r="14" fill="#f4b400"/><path d="M91 0 L109 0 L100 22 Z" fill="#ef4444" stroke="#fff" stroke-width="1.5"/></svg>'}
+function sBar(t){return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><button class="lang" onclick="ludoBack()">‹ '+T('वापस','Back')+'</button><b>'+t+'</b></div>'}
+function spinView(){var s=ldSpin(),can=s.last!==dk()&&!SPN.busy,h=sBar('🎡 Lucky Spin')+qlBtn();
+ h+='<div class="gzh" style="text-align:center"><div class="gzhd"><span style="color:#ffd54a">🪙 '+coins()+'</span><span>💖 '+s.life+'</span></div>'+wheelSvg()
+ +'<button id="gzsb" class="btn" style="background:'+(can?'linear-gradient(#ffe27a,#f0b323);color:#3a2200':'#2a3a66;color:#9fb0d6')+';margin-top:14px"'+(can?'':' disabled')+' onclick="gzSpin()">'+(can?'🎡 '+T('स्पिन करें','SPIN'):(SPN.busy?'…':'✅ '+T('आज का स्पिन हो गया · कल फिर आएँ','Spun today · come back tomorrow')))+'</button>'
+ +((SPN.res&&!SPN.busy)?'<div style="margin-top:12px;padding:10px;border-radius:14px;background:#111a30;border:2px solid #f4b400"><div class="muted" style="color:#9fb0d6">'+T('आज का इनाम','Today\'s reward')+'</div><b style="font-size:18px;color:#ffd54a">'+rtxt(SPN.res)+'</b></div>':'')+'</div>';
+ h+='<div class="card"><b>🎨 '+T('मेरी थीम','My themes')+'</b><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">'+TH.map(function(t){var ok=s.themes.indexOf(t.id)>=0;return '<button class="lang" style="padding:8px 12px;'+(s.th===t.id?'background:var(--acc);color:var(--onacc);border-color:var(--acc)':'')+(ok?'':';opacity:.5')+'"'+(ok?' onclick="gzTheme(\''+t.id+'\')"':' disabled')+'>'+(ok?t.ic:'🔒')+' '+T(t.n[0],t.n[1])+'</button>'}).join('')+'</div></div>'
+ +'<div class="card"><p class="muted">'+T('रोज़ एक बार घुमाइए। 🪙 कॉइन्स Ludo में दिखते हैं, 💖 अगली Sitara Rush रन में एक्स्ट्रा लाइफ देता है, 🎨 थीम से ऐप का रंग बदलता है। सिर्फ़ गेम के कॉइन्स और इनाम, कोई असली पैसा नहीं।','Spin once a day. 🪙 Coins show up in Ludo, 💖 gives an extra life in your next Sitara Rush run, 🎨 changes the app colour. Game coins and rewards only, no real money.')+'</p></div>';
+ return h}
+function hubHome(){var s=ldSpin(),can=s.last!==dk();
+ var dots='<span class="gzp"><i style="background:#e0443e"></i><i style="background:#3b6fe0"></i><i style="background:#2e9e4f"></i><i style="background:#f4b400"></i></span>';
+ var chess='<span class="gzch"><i>♔</i><i></i><i></i><i>♚</i><i></i><i></i><i>♔</i><i></i></span>';
+ var jk='<span style="display:flex;gap:14px;border:2px dashed #2e9e4f;border-radius:6px;padding:6px 10px"><i class="gzdt" style="background:#f4b400"></i><i class="gzdt" style="background:#e0443e"></i><i class="gzdt" style="background:#3b6fe0"></i></span>';
+ var vs='<span style="width:100%;padding:0 12px"><span style="display:flex;justify-content:space-between;font-size:12px;opacity:.8"><span>P1</span><span>P2</span></span><span style="display:block;height:8px;border-radius:4px;background:#162040;margin-top:5px"><span style="display:block;width:55%;height:100%;border-radius:4px;background:linear-gradient(90deg,#3b6fe0,#e0443e)"></span></span></span>';
+ var sw='<svg viewBox="0 0 200 200" width="84" style="display:block;margin:6px auto 0"><circle cx="100" cy="100" r="92" fill="#1a2540" stroke="#f4b400" stroke-width="8"/><g stroke="#b8860b" stroke-width="3"><path d="M100 100 L100 12M100 100 L188 100M100 100 L100 188M100 100 L12 100M100 100 L162 38M100 100 L162 162M100 100 L38 162M100 100 L38 38"/></g><circle cx="100" cy="100" r="16" fill="#f4b400"/><path d="M90 2 L110 2 L100 24 Z" fill="#ef4444"/></svg>';
+ function tile(oc,cls,col,ic,pv,en,hi,extra){return '<button class="gzt '+cls+'" style="--tc:'+col+'" onclick="'+oc+'"><span class="gzti">'+ic+'</span>'+(pv?'<span class="gzpv">'+pv+'</span>':'')+'<b>'+en+'</b><small>'+hi+'</small>'+(extra||'')+'</button>'}
+ return '<div class="gzh"><div class="gzhd"><span>🎮 '+T('गेम्स','Games')+'</span><span style="color:#ffd54a">🪙 '+coins()+'</span></div><div class="gzg">'
+ +tile('ludoOpen(1)','','#e0443e','🎲',dots,'Ludo Classic','लूडो क्लासिक')
+ +tile('ludoOpen(4)','','#5b6b8c','♟️',chess,'Chess Arena','शतरंज अखाड़ा')
+ +tile('ludoOpen(6)','sp'+(can?' on':''),'#f4b400','',sw,'Lucky Spin','लकी स्पिन · रोज़ एक बार','<span class="gzbd">'+(can?'🎁 '+T('आज का स्पिन तैयार!','Today\'s spin is ready!'):'✅ '+T('कल फिर आएँ','Come back tomorrow'))+'</span>')
+ +tile('ludoOpen(2)','','#2e9e4f','🃏',jk,'Jackaroo Master','जैकारू मास्टर')
+ +tile('ludoOpen(5)','','#3b6fe0','⚡',vs,'1v1 Clash','1v1 क्लैश · बॉट / ऑनलाइन')
+ +tile('ludoOpen(3)','wide','#a855f7','⭐','<span style="font-size:22px;letter-spacing:6px">⭐ ⭐ 🔴 ⭐</span>','Sitara Rush','सितारा रश · 30 लेवल')
+ +'</div></div>'}
+var _lv=window.ludoView;window.ludoView=function(){var o=window.ludoIsOpen();if(o===5)return qView();if(o===6)return spinView();if(!o)return hubHome();return _lv()};
+var _la=window.ludoAfter;window.ludoAfter=function(){var o=window.ludoIsOpen();if(o===5||o===6)return;return _la()};
+var _lo=window.ludoOpen;window.ludoOpen=function(v){if(v===5)qReset();if(v===6){SPN.res=null}return _lo(v)};
+var _lb=window.ludoBack;window.ludoBack=function(){var o=window.ludoIsOpen();if(o===5)qExit();if(o===6)spDone();return _lb()};
+MODULES.forEach(function(m){if(m.id==='games')m.view=window.ludoView});
+
+/* ---------- रिवीजन टैब ---------- */
+function ci(c){var r=CATS.filter(function(x){return x[0]===c})[0];return r?[r[1],pick(r[2])]:['📘',c]}
+function pc(c){var a=STA[c];return a[0]/(a[0]+a[1])}
+function pgView(){
+ var cs=curStreak(),td=STK.last===dk(),h=qlBtn();
+ h+='<div class="card"><b>🔁 '+T('गलत सवालों की रिवीजन लिस्ट','Revision list of wrong answers')+'</b><p class="muted">'+(REV.length?REV.length+' '+T('सवाल जमा हैं। हर बार 10 दोबारा पूछे जाएँगे; सही करने पर लिस्ट से हट जाएँगे।','questions saved. 10 are asked each round; get one right and it leaves the list.'):T('अभी कोई गलत सवाल जमा नहीं है। शाबाश!','No wrong answers saved yet. Great job!'))+'</p>'
+ +(REV.length?'<button class="btn" onclick="gzRevGo()">'+T('आज के 10 सवाल रिवीज़ करें','Revise 10 questions now')+'</button>':'')+'</div>';
+ var ks=Object.keys(STA).filter(function(c){return STA[c][0]+STA[c][1]>0}).sort(function(a,b){return pc(a)-pc(b)});
+ h+='<h2>📊 '+T('विषय-वार रिपोर्ट','Subject-wise report')+'</h2><div class="card">';
+ if(!ks.length)h+='<p class="muted">'+T('क्विज़ खेलिए, यहाँ आपकी रिपोर्ट बनेगी।','Play a quiz and your report will appear here.')+'</p>';
+ else{var tot=0,rt=0;ks.forEach(function(c){var a=STA[c],t=a[0]+a[1],p=Math.round(a[0]/t*100),x=ci(c);tot+=t;rt+=a[0];
+  h+='<div style="margin:10px 0"><div style="display:flex;justify-content:space-between"><b>'+x[0]+' '+x[1]+'</b><span><b>'+p+'%</b> <span class="muted">('+a[0]+'/'+t+')</span></span></div><div class="bar"><i style="width:'+p+'%;background:'+(p<50?'var(--bad)':p<75?'var(--gold)':'var(--good)')+'"></i></div></div>'});
+  h+='<p class="muted">'+T('कुल सही: ','Overall: ')+rt+'/'+tot+' ('+Math.round(rt/tot*100)+'%)</p>';
+  var wk=ks.filter(function(c){return STA[c][0]+STA[c][1]>=5&&pc(c)<.75})[0];
+  if(wk){var w=ci(wk);h+='<p>⚠️ <b>'+T('सबसे कमज़ोर: ','Weakest: ')+w[0]+' '+w[1]+'</b></p>'+(cnt(wk)?'<button class="btn" onclick="go(\'quiz\');startQuiz(\''+wk+'\')">'+T('इसकी प्रैक्टिस करें','Practise this subject')+'</button>':'')}
+  else h+='<p class="muted">'+T('हर विषय में कम से कम 5 सवाल हल करने पर कमज़ोर विषय बताया जाएगा।','Solve at least 5 questions in a subject to see your weak areas.')+'</p>'}
+ h+='</div>';
+ return h}
+
+function streakView(){var cs=curStreak(),td=STK.last===dk(),h=qlBtn();
+ h+='<div class="card" style="text-align:center"><div class="big">🔥 '+cs+'</div><p><b>'+T('दिन की स्ट्रीक','day streak')+'</b></p><p class="muted">'+T('सबसे लंबी: ','Best: ')+STK.best+' '+T('दिन','days')+'</p><div class="gzw">';
+ for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);var on=STK.days.indexOf(dk(d))>=0;h+='<div><div class="gzd'+(on?' on':'')+'">'+(on?'🔥':'')+'</div>'+(lang==='h'?WKH:WKE)[d.getDay()]+'</div>'}
+ h+='</div><p>'+(td?'✅ '+T('आज की स्ट्रीक पक्की!','Today is counted!'):'⏳ '+T('आज कुछ खेलिए, स्ट्रीक बचाइए!','Play something today to keep your streak!'))+'</p></div>';
+ h+='<div class="card"><b>🏅 '+T('बैज','Badges')+'</b><div style="display:flex;gap:8px;margin-top:8px">'+BDG.map(function(b){var ok=STK.best>=b.d;return '<div class="gzb'+(ok?' on':' off')+'"><div style="font-size:32px">'+b.ic+'</div><b>'+T(b.h,b.e)+'</b><div class="muted" style="font-size:12px">'+b.d+' '+T('दिन','days')+(ok?' ✅':'')+'</div></div>'}).join('')+'</div>';
+ var nx=BDG.filter(function(b){return STK.best<b.d})[0];if(nx)h+='<p class="muted">'+T('अगला बैज: ','Next badge: ')+nx.ic+' · '+Math.max(0,nx.d-cs)+' '+T('दिन और','more days')+'</p>';
+ 
+ return h}
+var SK=false;
+window.gzOpenStreak=function(){try{history.pushState({},'')}catch(e){}SK=true;render();window.scrollTo(0,0)};
+window.gzSkBack=function(){SK=false;render();window.scrollTo(0,0)};
+/* ---------- सेव किए: हब पेज → "सेव किए सवाल" और "रिवीजन" अलग-अलग अगले पेज पर ---------- */
+var PGV=null;
+function subBar(t){return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><button class="lang" onclick="gzSvBack()">‹ '+T('वापस','Back')+'</button><b>'+t+'</b></div>'}
+window.gzSvBack=function(){PGV=null;render();window.scrollTo(0,0)};
+window.gzSvOpen=function(v){try{history.pushState({},'')}catch(e){}PGV=v;render();window.scrollTo(0,0)};
+window.gzOpenRev=function(){try{history.pushState({},'')}catch(e){}tab='saved';PGV='rev';render();window.scrollTo(0,0)};
+function hubView(){
+ if(PGV==='saved')return subBar('⭐ '+T('सेव किए सवाल','Saved questions'))+gsvUI();
+ if(PGV==='rev')return subBar('🔁 '+T('रिवीजन','Revision'))+pgView();
+ var cs=curStreak(),box=function(n,l){return '<div class="gzb"><div style="font-size:22px;font-weight:800">'+n+'</div><div class="muted" style="font-size:12px">'+l+'</div></div>'};
+ return qlBtn()+'<h2>⭐ '+T('सेव और रिवीजन','Saved & Revision')+'</h2><div style="display:flex;gap:8px;margin:8px 0">'+box('⭐ '+GSV.length,T('सेव किए','Saved'))+box('🔁 '+REV.length,T('रिवीजन','To revise'))+'</div>'
+ +navRow('⭐',T('सेव किए सवाल','Saved questions'),GSV.length?GSV.length+' '+T('सवाल · जब चाहें दोबारा पढ़ें','questions · read again anytime'):T('अभी कोई सवाल सेव नहीं','Nothing saved yet'),"gzSvOpen('saved')")
+ +navRow('🔁',T('रिवीजन','Revision'),(REV.length?REV.length+' '+T('गलत सवाल दोबारा करने को','wrong answers to revise'):T('कोई गलत सवाल नहीं','No wrong answers'))+' · '+T('विषय-वार रिपोर्ट','subject-wise report'),"gzSvOpen('rev')")
+ +(REV.length?'<button class="btn" onclick="gzRevGo()">🔁 '+T('आज के 10 सवाल रिवीज़ करें','Revise 10 questions now')+'</button>':'')}
+
+/* जोड़ना: सेव टैब को हब बनाना, ⋮ मेन्यू का टेक्स्ट, बैक बटन */
+MODULES.forEach(function(m){if(m.id==='quiz')m.view=quiz});
+MODULES.forEach(function(m){if(m.id==='saved'){m.view=hubView;m.t=['सेव / रिवीजन','Saved / Revise']}});
+var _go=go;go=function(id){SK=false;if(id!=='saved'||id===tab)PGV=null;return _go(id)};
+var _pp2=window.onpopstate;window.onpopstate=function(e){if(SK&&tab==='quiz'){SK=false;render();window.scrollTo(0,0);return}if(tab==='saved'&&PGV&&!NAV.v){PGV=null;render();window.scrollTo(0,0);return}if(typeof _pp2==='function')return _pp2.call(this,e)};
+var _dt=dirText;dirText=function(){var L=function(a,b){return '<li>'+T(a,b)+'</li>'};
+ if(tab==='saved'&&PGV==='rev')return[T('रिवीजन पेज के बारे में','About the Revision page'),'<ul>'+[L('गलत सवाल अपने आप रिवीजन लिस्ट में जुड़ते हैं और रिवीजन में सही करने पर हट जाते हैं।','Wrong answers join the revision list automatically and leave it once you get them right in revision.'),L('विषय-वार रिपोर्ट से कमज़ोर विषय पता चलता है।','The subject-wise report shows your weak subjects.')].join('')+'</ul>']
+ if(spOpen())return[T('Lucky Spin के बारे में','About Lucky Spin'),'<ul>'+[L('रोज़ एक बार स्पिन करें। इनाम: 🪙 कॉइन्स, 🎨 नई थीम या 💖 Sitara Rush का एक्स्ट्रा लाइफ।','Spin once a day. Rewards: 🪙 coins, a 🎨 new theme or 💖 an extra Sitara Rush life.'),L('कोई असली पैसा या इनाम नहीं मिलता, सिर्फ़ गेम के कॉइन्स और थीम।','No real money or prizes, only game coins and themes.')].join('')+'</ul>']
+ if(qOpen())return[T('Quiz 1v1 के बारे में','About Quiz 1v1'),'<ul>'+[L('बॉट के साथ ऑफलाइन या दोस्त के साथ ऑनलाइन (रूम कोड से) खेलें।','Play offline against a bot or online with a friend using a room code.'),L('10 सवाल मिलते हैं; जिसके ज़्यादा सही हों वो जीतता है और जश्न होता है।','You get 10 questions; whoever gets more right wins and the celebration plays.'),L('इसमें कोई पैसा या इनाम नहीं है।','No money or prizes are involved.')].join('')+'</ul>']
+ return _dt()};
+render();
+})();
 </script>
 </body>
 </html>
