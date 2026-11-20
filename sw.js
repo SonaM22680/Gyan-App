@@ -1,0 +1,8 @@
+// Network-first: updates GitHub par daalte hi aa jate hain; offline me cache se chalta hai.
+var C='gyan-v1';
+self.addEventListener('install',function(e){self.skipWaiting()});
+self.addEventListener('activate',function(e){e.waitUntil(caches.keys().then(function(k){return Promise.all(k.filter(function(x){return x!==C}).map(function(x){return caches.delete(x)}))}).then(function(){return self.clients.claim()}))});
+self.addEventListener('fetch',function(e){
+ if(e.request.method!=='GET'||new URL(e.request.url).origin!==location.origin)return;
+ e.respondWith(fetch(e.request).then(function(r){var c=r.clone();caches.open(C).then(function(x){x.put(e.request,c)});return r}).catch(function(){return caches.match(e.request)}));
+});

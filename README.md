@@ -1,102 +1,79 @@
-# ज्ञान ऐप / Gyan App
+# 📚 Gyan App
 
-हिंदी + English में बना एक ही फ़ाइल (`index.html`) का ऐप: क्विज़, मॉक टेस्ट, नोट्स, Ludo गेम, निजी चैट और ड्रोन डिज़ाइन लैब।
-A single-file Hindi + English app: quizzes, mock tests, notes, a Ludo game, private chat and a drone Design Lab.
+SSC · Railway · Bank · UP Police जैसी परीक्षाओं की तैयारी के लिए क्विज़, हस्तलिखित-शैली नोट्स, गेम्स और चैट वाला मोबाइल-फ्रेंडली वेब ऐप।
+*A mobile-friendly exam-prep web app with quizzes, handwritten-style notes, games and chat (Hindi + English).*
 
-कोई install, build या server नहीं चाहिए। `index.html` खोलिए, ऐप चल जाता है। ऑनलाइन Ludo और चैट के लिए लॉगिन और इंटरनेट चाहिए।
-No install, build step or server needed. Open `index.html` and it runs. Online Ludo and chat need a login and internet.
+## ✨ Features
 
-यह ऐप सिर्फ़ **18 साल या उससे ज़्यादा उम्र** के लोगों के लिए है।
-This app is for users aged **18 and older** only.
+- **विषय:** इतिहास (प्राचीन, मध्यकालीन, आधुनिक), भूगोल, हिंदी, English, रिजनिंग, गणित, संविधान, विज्ञान, कंप्यूटर (ICT)
+- **Subject Notes:** हर विषय के अध्याय-वार हस्तलिखित-शैली नोट्स
+- **Topic-wise Quiz:** हर टॉपिक का अलग क्विज़, साथ में मिक्स क्विज़
+- Practice Paper, Monthly Exam, Saved / Revise, Games, Chat
+- हिंदी / English toggle, Dark mode
+- Offline सपोर्ट (service worker) और PWA manifest
 
-## टैब / Tabs
+## 📁 Files
 
-| टैब | क्या मिलता है |
+| File | काम |
 |---|---|
-| 📝 क्विज़ / Quiz | विषय के हिसाब से 10 सवाल का क्विज़ (हर सवाल 40 सेकंड, गलत पर −0.25), विषय नोट्स, मॉक टेस्ट और पूरे पेपर |
-| ⭐ सेव किए / Saved | सेव किए हुए सवाल और नोट्स |
-| 🎮 गेम्स / Games | Ludo: एक फ़ोन पर 2 या 4 खिलाड़ी (ऑफ़लाइन), या रूम कोड से ऑनलाइन (लॉगिन चाहिए) |
-| 💬 निजी चैट / Private chat | चैट कोड से निजी चैट, रिपोर्ट और ब्लॉक की सुविधा के साथ |
-| 🛠️ डिज़ाइन लैब / Design Lab | ड्रोन फ्रेम डिज़ाइन, वज़न और उड़ान का अंदाज़ा, पार्ट्स लिस्ट और 3D प्रिंट के लिए STL डाउनलोड |
+| `index.html` | ऐप का पूरा कोड और UI |
+| `d01.js … d18.js` | बड़े क्विज़ सवाल और नोट्स का डेटा (index.html से पहले load होते हैं) |
+| `privacy.html`, `terms.html`, `delete-account.html` | Privacy Policy, Terms of Use, खाता हटाने का पेज (Play Store में यही लिंक दें) |
+| `sw.js` | Offline cache (network-first, इसलिए अपडेट तुरंत आते हैं) |
+| `manifest.json` | PWA जानकारी |
 
-## क्विज़ टैब में क्या है
+> ⚠️ `d01.js … d18.js` और `index.html` हमेशा एक ही जगह (root) में रखें। फ़ाइलों के नाम या क्रम न बदलें।
 
-- **12 विषय:** इतिहास, भूगोल, हिंदी, English, रिजनिंग, गणित, संविधान, विज्ञान, सामान्य ज्ञान, कंप्यूटर (ICT), बाल सुरक्षा कानून, छात्रावास प्रशासन
-- **2000+ सवाल**, ज़्यादातर हिंदी और English दोनों में, जवाब के बाद व्याख्या
-- **नोट्स:** इतिहास, हिंदी व्याकरण और संविधान
-- **मॉक टेस्ट (25 सवाल):** SSC CGL छोटा मॉक, रेलवे, बैंक, UP पुलिस कांस्टेबल
-- **पूरे पेपर:** SSC CGL Tier-1 (100 सवाल, 60 मिनट), SSC CGL Tier-2 Paper-1 (130 सवाल, 135 मिनट), EMRS छात्रावास अधीक्षक के 60-60 सवाल के सेट (90 मिनट)
+## 🚀 GitHub Pages पर डालने के स्टेप्स
 
-## और क्या है
+1. GitHub पर नया **Public** repo बनाएँ (जैसे `Gyan-App`).
+2. `index.html`, `sw.js`, `manifest.json`, `privacy.html`, `terms.html`, `delete-account.html`, `README.md` और `d01.js` से `d18.js` तक सारी फ़ाइलें upload करें (*Add file → Upload files*).
+3. **Settings → Pages → Source:** *Deploy from a branch* → Branch `main`, folder `/ (root)` → **Save**.
+4. 1–2 मिनट बाद लिंक मिलेगा: `https://sidhhi22680.github.io/Gyan-App/`
 
-- हिंदी / English बदलने का बटन (ऊपर कोने में)
-- लाइट और डार्क मोड, फ़ोन की सेटिंग के हिसाब से अपने आप
-- मोबाइल के लिए बना है: नीचे नेविगेशन बार और फ़ोन के बैक बटन से सही स्क्रीन पर वापसी
-- Help & Support: ⋮ मेन्यू में, यहीं से अकाउंट डिलीट भी होता है
-- Design Lab का स्कोर बोर्ड ब्राउज़र की `localStorage` में सेव होता है, सिर्फ़ उसी ब्राउज़र में दिखता है
+## 📱 Kodular में जोड़ना
 
-## प्राइवेसी और अकाउंट / Privacy and account
+- WebViewer का **HomeUrl** ऊपर वाला GitHub Pages लिंक रखें।
+- ऐप में बदलाव करने पर बस GitHub पर फ़ाइल बदलें; ऐप दोबारा build या Play Store पर update करने की ज़रूरत नहीं।
 
-- **साइन-अप:** नाम, ईमेल और पासवर्ड (Firebase Authentication)। साइन-अप पर "मैं 18+ हूँ" पर टिक ज़रूरी है।
-- **अकाउंट डिलीट:** ऐप में ⋮ मेन्यू → Help & Support → Delete account। पासवर्ड डालें, बॉक्स पर टिक करें और बटन दबाएँ।
-- **प्राइवेसी पॉलिसी:** [`privacy-policy.html`](privacy-policy.html)
-- **डिलीट पेज (वेब):** [`delete-account.html`](delete-account.html)
+## 🔐 Firebase सेटअप
 
-## चलाने का तरीका / How to run
+1. **Authentication → Sign-in method:** *Email/Password* चालू करें।
+2. **Google Cloud Console → APIs & Services → Credentials** में ऐप की API key खोलें:
+   - *Application restrictions:* **Websites** चुनकर `https://sidhhi22680.github.io/*` डालें (Kodular WebView में बिना GitHub लिंक के खाली referer जाता है और `Requests from referer <empty> are blocked` error आता है)
+   - *API restrictions:* सिर्फ़ **Identity Toolkit API** और **Token Service API**
+3. **Realtime Database → Rules:** खुले rules (`".read": true, ".write": true`) न रखें। कम से कम `auth != null` रखें और हर यूज़र को सिर्फ़ अपना डेटा लिखने दें।
 
-1. `index.html` को ब्राउज़र में खोलें, या
-2. GitHub Pages, Netlify, Vercel जैसी किसी स्टैटिक होस्टिंग पर अपलोड करें।
+> Firebase की web API key secret नहीं होती। असली सुरक्षा Database Rules (और चाहें तो App Check) से आती है, key को छिपाने से नहीं।
 
-GitHub Pages के लिए: Repo की Settings → Pages → Branch `main` और `/ (root)` चुनें → Save। थोड़ी देर में ऐप का लिंक मिल जाएगा।
+## ➕ नया कंटेंट जोड़ना
 
-> ध्यान दें: ऐप की फ़ाइल का नाम बिल्कुल `index.html` होना चाहिए। `index (3).html` जैसे नाम पर लिंक खोलने से ऐप की जगह README का पेज दिखता है।
+- **नया क्विज़ सवाल:** `d01–d18.js` की संबंधित फ़ाइल में उसी फ़ॉर्मेट में जोड़ें (`"हिंदी सवाल|English question"` और विकल्प `"हिंदी|English"`).
+- **नया नोट:** `NOTES=NOTES.concat([...])` वाली फ़ाइल में जोड़ें।
+- भूगोल के नए टॉपिक के लिए `index.html` में `GEOQ` सूची में एक entry जोड़ें।
+- बदलाव के बाद `sw.js` में `var C='gyan-v1'` को `gyan-v2` कर दें, ताकि पुराना cache साफ़ हो जाए।
 
-फ़ॉन्ट (Kalam) Google Fonts से आता है। इंटरनेट न हो तो ऐप सिस्टम फ़ॉन्ट से चलता रहता है।
+## 🧪 लोकल में चलाना
 
-## नए सवाल जोड़ना / Adding questions
+फ़ाइल को सीधे खोलने पर service worker नहीं चलता; सर्वर से चलाएँ:
 
-सवाल `index.html` के `<script>` में `A(...)` फ़ंक्शन से जुड़ते हैं:
-
-```js
-A('श्रेणी', 'लेबल', [
-  ['सवाल', 'विकल्प1;विकल्प2;विकल्प3;विकल्प4', सही_नंबर_0_से, 'व्याख्या'],
-]);
+```bash
+python3 -m http.server 8000
+# फिर ब्राउज़र में http://localhost:8000
 ```
 
-- `श्रेणी` `CATS` में दी गई id होनी चाहिए (जैसे `history`, `gk`, `math`)
-- सही उत्तर का नंबर 0 से शुरू होता है (पहला विकल्प = 0)
-- English अनुवाद `ENX` सूची में उसी क्रम में जोड़ें। फ़ॉर्मैट: `'English question|opt1;opt2;opt3;opt4|English explanation'`
+## 📝 Notes
 
-## नया टैब जोड़ना / Adding a new tab
+- ऐप ब्राउज़र के `localStorage` में progress रखता है (saved सवाल, streak आदि)। ब्राउज़र/ऐप का डेटा साफ़ होने पर यह मिट जाता है।
+- सवाल और नोट्स ऐप के साथ public रहते हैं (पेज का source देखने पर दिखते हैं)।
 
-`MODULES` में एक entry जोड़ें:
+## 📢 AdMob जोड़ते समय
 
-```js
-{id:'mytab', icon:'⭐', t:['हिंदी नाम','English name'], view:myView}
-```
+- Privacy Policy में AdMob पहले से लिखा है ("once ads are switched on")। विज्ञापन चालू करते समय Play Console के **Data safety** फ़ॉर्म में *Advertising ID* और *Device or other IDs* भी चुनें, और **Ads declaration** में "Yes" करें।
+- Kodular में AdMob जोड़ने के बाद ऐप फिर से build करना पड़ेगा।
 
-`myView` एक फ़ंक्शन है जो उस टैब का HTML string लौटाता है।
+## 🔗 Play Store के लिए लिंक
 
-## ऑनलाइन Ludo और चैट (Firebase) / Online Ludo and chat
-
-ऑनलाइन हिस्से Firebase Realtime Database और Firebase Authentication से चलते हैं। `index.html` में `FIREBASE_DB_URL` और `FIREBASE_API_KEY` भरे हैं।
-
-> ध्यान दें: बिना लॉगिन के खुले rules कोई भी बदल सकता है। Database के rules में सिर्फ़ लॉगिन किए हुए यूज़र को पढ़ने और लिखने दें (`auth != null`)।
-
-## 3D प्रिंट सेटिंग (Design Lab)
-
-फ्रेम सपाट लिटाकर प्रिंट करें, बिना सपोर्ट के, लेयर 0.2 मिमी, इन्फ़िल 100%। मोटर, बैटरी और कंट्रोलर अलग से लगाने होंगे।
-सारे आँकड़े अनुमानित हैं। कैमरे वाला ड्रोन उड़ाते समय दूसरों की निजता और अपने देश के ड्रोन नियमों का पालन करें।
-
-## फ़ाइलें / Files
-
-```
-index.html            # पूरा ऐप: HTML + CSS + JavaScript
-privacy-policy.html   # प्राइवेसी पॉलिसी
-delete-account.html   # अकाउंट डिलीट का वेब पेज
-README.md             # यह फ़ाइल
-```
-
-## Browser support
-
-नए Chrome, Edge, Safari और Firefox पर चलता है। कोई बाहरी लाइब्रेरी इस्तेमाल नहीं हुई, सिर्फ़ Google Fonts का फ़ॉन्ट और Firebase सेवाएँ।
+- Privacy Policy: `https://sidhhi22680.github.io/Gyan-App/privacy.html`
+- Account deletion: `https://sidhhi22680.github.io/Gyan-App/delete-account.html`
+- Terms: `https://sidhhi22680.github.io/Gyan-App/terms.html`
