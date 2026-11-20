@@ -3,14 +3,14 @@
 <head>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap" rel="stylesheet">
 <meta charset="utf-8"><meta name="google" content="notranslate"><meta http-equiv="Content-Language" content="en">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Gyan App</title>
 <style>
 :root{--bg:#F3F6FB;--ink:#14213D;--card:#fff;--line:#D5DCEA;--acc:#4A1275;--hd:#3B0764;--onacc:#fff;--good:#0B7A5A;--bad:#C0392B;--gold:#B7791F;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1626;--ink:#E8EDF8;--card:#182238;--line:#2A3858;--acc:#B58CFF;--hd:#2A0A47;--onacc:#0F1626;--good:#4FD1A5;--bad:#FF8A7A;--gold:#F2C265}}
 :root[data-theme="dark"]{--bg:#0F1626;--ink:#E8EDF8;--card:#182238;--line:#2A3858;--acc:#B58CFF;--hd:#2A0A47;--onacc:#0F1626;--good:#4FD1A5;--bad:#FF8A7A;--gold:#F2C265}
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,'Noto Sans Devanagari','Mukta',Roboto,sans-serif;font-size:17px;line-height:1.5}
+html,body{touch-action:manipulation;margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,'Noto Sans Devanagari','Mukta',Roboto,sans-serif;font-size:17px;line-height:1.5}
 main{max-width:560px;margin:0 auto;padding:12px 16px 96px}
 header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 h1{font-size:22px;font-weight:800;margin:0}
@@ -1101,7 +1101,7 @@ function modSend(v){if(banned)return T('आपकी ID चैट से ब्�
  return er}
 var PC_TTL=172800000;var PC={code:'',poll:null,list:[],sig:''},PU='x';
 try{PU=localStorage.getItem('gy_pcid')||Math.random().toString(36).slice(2,10);localStorage.setItem('gy_pcid',PU)}catch(e){}
-function pcName(){var a=window.GYX&&GYX.au&&GYX.au();return(a&&a.name)||'Player'}
+function pcName(){var a=window.GYX&&GYX.au&&GYX.au();try{var n=(JSON.parse(localStorage.getItem('gy_prof')||'{}').nick||'').trim();if(n)return n}catch(e){}return(a&&a.name)||'Player'}
 function pcFb(m,b,p,q){var X=window.GYX;if(!X||!X.db)return Promise.reject(0);return X.aTok().then(function(t){if(!t)throw 0;var qs=['auth='+encodeURIComponent(t)];if(q)qs.push(q);var u=p.charAt(0)==='!'?p.slice(1):'ludo/'+p;return fetch(X.db+'/'+u+'.json?'+qs.join('&'),{method:m,body:b!==undefined?JSON.stringify(b):undefined}).then(function(r){return r.json()})})}
 function banPut(){var a=window.GYX&&GYX.au&&GYX.au();if(a)pcFb('PUT',true,'!bans/'+a.uid).catch(function(){})}
 var BG=0;function banGet(){var a=window.GYX&&GYX.au&&GYX.au();if(!a||BG===a.uid)return;BG=a.uid;pcFb('GET',undefined,'!bans/'+a.uid).then(function(r){if(r===true){banned=true;strikes=2;try{localStorage.setItem('gy_strikes',2)}catch(e){}render()}}).catch(function(){BG=0})}
@@ -1179,17 +1179,25 @@ function frAcc(i){var me=frMe(),q=FR.req[i];if(!me||!q)return;
 function frRej(i){var me=frMe(),q=FR.req[i];if(!me||!q)return;
  pcFb('DELETE',undefined,'FR/'+me+'/'+q.u).then(function(){delete FR.known[q.u];FR.t=0;note(T('रिक्वेस्ट हटाई गई','Request declined'));return frFetch()}).catch(function(){note(T('नेटवर्क एरर','Network error'))})}
 function frHTML(){var me=frMe();if(!me)return '';
- var h='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>👥 '+T('दोस्त','Friends')+'</b><button class="lang" onclick="frTog()">'+(FR.on?'🔔 '+T('सूचना चालू','Alerts ON'):'🔕 '+T('सूचना बंद','Alerts OFF'))+'</button></div>'
+ var h='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>👥 '+T('दोस्त','Friends')+'</b><span><button class="lang" onclick="frEditTog()">'+(FRE.on?T('रद्द करें','Cancel'):'✏️ '+T('एडिट','Edit'))+'</button> <button class="lang" onclick="frTog()">'+(FR.on?'🔔 '+T('सूचना चालू','Alerts ON'):'🔕 '+T('सूचना बंद','Alerts OFF'))+'</button></span></div>'
   +'<p class="muted" style="margin:6px 0">'+T('आपकी ID: ','Your ID: ')+'<b>'+lbId()+'</b> · '+T('दोस्त को यह ID दें','share this ID with your friend')+'</p>'
   +'<div style="display:flex;gap:8px"><input id="fri" maxlength="9" placeholder="'+T('दोस्त की ID (GY-AB12C)','Friend ID (GY-AB12C)')+'" style="margin:0;flex:1"><button class="btn" style="width:auto;margin:0;padding:8px 16px" onclick="frAdd()">➕ '+T('जोड़ें','Add')+'</button></div>';
  if(FR.err)h+='<p class="err">'+T('फ्रेंड सिस्टम अभी सर्वर पर चालू नहीं है (Firebase rules में FID, FR, FL खोलने होंगे)।','Friends are not enabled on the server yet (open FID, FR and FL in the Firebase rules).')+'</p>';
  if(FR.req.length){h+='<p style="margin:12px 0 4px"><b>📨 '+T('फ्रेंड रिक्वेस्ट','Friend requests')+' ('+FR.req.length+')</b></p>'+FR.req.map(function(q,i){return '<div class="msg" style="display:flex;align-items:center;gap:10px"><span style="font-size:26px">'+q.a+'</span><span style="flex:1;line-height:1.25"><b>'+esc2(q.n)+'</b><br><small class="muted">'+esc2(q.id)+'</small></span><button class="btn" style="width:auto;margin:0;padding:8px 12px" onclick="frAcc('+i+')">✅ '+T('स्वीकारें','Accept')+'</button><button class="btn ghost" style="width:auto;margin:0;padding:8px 12px" aria-label="Decline" onclick="frRej('+i+')">✖</button></div>'}).join('')}
  h+='<p style="margin:12px 0 4px"><b>'+T('मेरे दोस्त','My friends')+' ('+FR.fl.length+')</b></p>';
- h+=FR.fl.length?FR.fl.map(function(f){return '<div class="msg" style="display:flex;align-items:center;gap:10px"><span style="font-size:26px">'+f.a+'</span><span style="flex:1;line-height:1.25"><b>'+esc2(f.n)+'</b><br><small class="muted">'+esc2(f.id)+'</small></span></div>'}).join(''):'<p class="muted">'+T('अभी कोई दोस्त नहीं। ऊपर ID डालकर जोड़ें।','No friends yet. Add one using their ID above.')+'</p>';
+ h+=FR.fl.length?FR.fl.map(function(f){return '<div class="msg" style="display:flex;align-items:center;gap:10px"'+(FRE.on?' onclick="frPick(\''+f.u+'\')"':'')+'>'+(FRE.on?'<span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;'+(FRE.sel[f.u]?'background:var(--acc);color:var(--onacc);border:2px solid var(--acc)':'border:2px solid var(--line)')+'">'+(FRE.sel[f.u]?'✓':'')+'</span>':'')+'<span style="font-size:26px">'+f.a+'</span><span style="flex:1;line-height:1.25"><b>'+esc2(f.n)+'</b><br><small class="muted">'+esc2(f.id)+'</small></span></div>'}).join(''):'<p class="muted">'+T('अभी कोई दोस्त नहीं। ऊपर ID डालकर जोड़ें।','No friends yet. Add one using their ID above.')+'</p>';
+ if(FRE.on){var dn=Object.keys(FRE.sel).length;h+='<button class="btn" style="background:var(--bad);color:#fff;opacity:'+(dn?1:.5)+'"'+(dn?'':' disabled')+' onclick="frDelAsk()">🗑 '+T('हटाएँ','Delete')+' ('+dn+')</button>'}
  return h+'</div>'}
+var FRE={on:0,sel:{}};
+function frEditTog(){FRE.on=FRE.on?0:1;FRE.sel={};frShow()}
+function frPick(u){if(FRE.sel[u])delete FRE.sel[u];else FRE.sel[u]=1;frShow()}
+function frDelAsk(){var ks=Object.keys(FRE.sel);if(!ks.length)return;if(!confirm(T(ks.length+' दोस्त हटाएँ?',"Remove "+ks.length+" friend(s)?")))return;
+ var me=frMe();if(!me)return;
+ Promise.all(ks.map(function(u){return Promise.all([pcFb('DELETE',undefined,'FL/'+me+'/'+u),pcFb('DELETE',undefined,'FL/'+u+'/'+me)])})).then(function(){
+  FR.fl=FR.fl.filter(function(f){return !FRE.sel[f.u]});FRE.on=0;FRE.sel={};FR.t=0;note(T('दोस्त हटा दिए गए','Friends removed'));frShow();frFetch(1)}).catch(function(){note(T('नहीं हट सका, बाद में कोशिश करें','Could not remove, try later'))})}
 function chat(){
  banGet();
- var h='<h2>💬 '+T('चैट','Chat')+'</h2><div class="card"><b>⚠️ '+T('सख्त नियम','Strict rules')+'</b><p>'+T('अपनी पर्सनल डिटेल देना और गाली, अश्लील सामग्री देना या लेना सख्त मना है। अश्लील वीडियो या अश्लील फोटो भेजना प्रतिबंधित है। ऐसा कोई करता है तो उसकी ID ब्लॉक कर दी जाएगी।','Sharing your personal details, and giving or receiving abuse or obscene content, is strictly prohibited. Sending obscene videos or photos is banned. Anyone who does this will have their ID blocked.')+'</p><p class="muted">'+T('चैट के संदेश 2 दिन बाद अपने-आप हट जाते हैं।','Chat messages are deleted automatically after 2 days.')+'</p></div>';
+ var h='<h2>💬 '+T('चैट','Chat')+'</h2>';
  if(banned)return h+'<p class="err">'+T('आपकी ID चैट से ब्लॉक कर दी गई है।','Your ID has been blocked from chat.')+'</p>';
  if(!(window.GYX&&GYX.au&&GYX.au()))return h+accCard(T('चैट के लिए लॉगिन करें।','Log in to use chat.'));
  h+='<div id="frb">'+frHTML()+'</div>';setTimeout(frLoad,60);
@@ -2333,7 +2341,7 @@ function dirText(){var c=dotCtx(),L=function(a,b){return '<li>'+T(a,b)+'</li>'},
  else if(c.k==='game4'){t=T('शतरंज के बारे में','About Chess');h=u([L('ऑफलाइन या ऑनलाइन मोड चुनें।','Choose offline or online mode.'),L('अपनी बारी पर अपना मोहरा चुनकर उसकी चाल चलें।','On your turn, select your piece and make its move.'),L('सामने वाले के राजा को शह-मात देने वाला जीतता है।','Checkmate the opponent’s king to win.')])}
  else if(c.k==='game3'){t='About Sitara Rush';h='<br><b>🎮 How to play</b><ul><li>Drag yourself (your character) with your finger. Your chosen loved one is calling for help at the top.</li><li>Keyboard: arrow keys or W A S D.</li></ul><b>⭐ What to catch, what to dodge</b><ul><li>⭐ Shiny star: +10 points</li><li>🟢 Green coin: +20 points</li><li>🔵 Blue coin: +30 points</li><li>⚫ Black coin: +50 points (from level 5)</li><li>❤️ Heart: +1 life (max 5)</li><li>🖤 Black heart: -1 life (from level 3)</li><li>🔴 Red star: touching it stops the game! More of them appear as levels rise.</li></ul>'}
  else if(c.k==='exam'){t=T('इस पेज के बारे में','About this page');h=u([L('इनाम वाली परीक्षा सिर्फ़ 18+ के लिए है, एंट्री मुफ़्त है।','The prize exam is for 18+ only. Entry is free.'),L('नतीजा और UPI इनाम परीक्षा के 2 दिन बाद मिलता है। कोई वॉलेट या विड्रॉ नहीं है।','Result and UPI prize come 2 days after the exam. There is no wallet or withdrawal.'),L('नकल रोकने के लिए AI जाँच होती है।','AI checks are used to stop cheating.')])}
- else if(c.k==='chat'){t=T('चैट के बारे में','About chat');h=u([L('अपनी पर्सनल डिटेल, फ़ोन नंबर या सोशल मीडिया आईडी न भेजें।','Do not share personal details, phone numbers or social media IDs.'),L('गाली या अश्लील सामग्री भेजना सख्त मना है। ऐसा करने पर ID ब्लॉक हो सकती है।','Abuse or obscene content is strictly not allowed. Your ID may be blocked.')])}
+ else if(c.k==='chat'){t=T('चैट के बारे में','About chat');h=u([L('अपनी पर्सनल डिटेल, फ़ोन नंबर या सोशल मीडिया आईडी न भेजें।','Do not share personal details, phone numbers or social media IDs.'),L('गाली या अश्लील सामग्री भेजना सख्त मना है। ऐसा करने पर ID ब्लॉक हो सकती है।','Abuse or obscene content is strictly not allowed. Your ID may be blocked.'),L('अपनी पर्सनल डिटेल देना और गाली, अश्लील सामग्री देना या लेना सख्त मना है। अश्लील वीडियो या अश्लील फोटो भेजना प्रतिबंधित है। ऐसा कोई करता है तो उसकी ID ब्लॉक कर दी जाएगी।','Sharing your personal details, and giving or receiving abuse or obscene content, is strictly prohibited. Sending obscene videos or photos is banned. Anyone who does this will have their ID blocked.'),L('चैट के संदेश 2 दिन बाद अपने-आप हट जाते हैं।','Chat messages are deleted automatically after 2 days.')])}
  else if(c.k==='saved'){t=T('सेव किए सवाल','Saved questions');h=u([L('जो सवाल आपने सेव किए हैं वे यहाँ दिखते हैं।','Questions you saved appear here.'),L('दोबारा पढ़कर अभ्यास करें।','Read them again to practise.')])}
  else{t=T('इस पेज के बारे में','About this page');h=u([L('नीचे के बटनों से क्विज़, परीक्षा, गेम्स और चैट के बीच जाएँ।','Use the bottom buttons to move between Quiz, Exam, Games and Chat.'),L('मदद चाहिए तो ⋮ में से "मदद और संपर्क" चुनें।','For help, choose "Help & Support" from the ⋮ menu.')])}
 
@@ -2450,6 +2458,7 @@ function ppView(){if(LQ)return langPick();if(P)return P.done?paperResult():paper
 /* ===== Profile tab (Chat ke bagal me) ===== */
 function profileView(){
  var a=window.GYX&&GYX.au&&GYX.au();
+ if(a&&window.EP&&EP.open)return epView();
  var h='<h2>👤 '+T('मेरी प्रोफ़ाइल','My Profile')+'</h2>';
  if(!a)return h+accCard(T('अपनी प्रोफ़ाइल देखने के लिए लॉगिन करें।','Log in to see your profile.'));
  var coins='-';try{if(window.gyCoins)coins=window.gyCoins()}catch(e){}
@@ -2457,7 +2466,7 @@ function profileView(){
  h+='<div class="card" style="text-align:center"><div style="font-size:64px;line-height:1.1">'+lbAv()+'</div>'
   +'<div style="font-size:22px;font-weight:800;margin-top:6px">'+nm+'</div>'
   +(em?'<div class="muted">'+em+'</div>':'')
-  +'<div class="muted" style="margin-top:4px">'+T('आपकी ID: ','Your ID: ')+'<b>'+lbId()+'</b></div></div>';
+  +'<div class="muted" style="margin-top:4px">'+T('आपकी ID: ','Your ID: ')+'<b>'+lbId()+'</b></div><button class="btn ghost" style="margin:10px 0 0" onclick="epOpen()">✏️ '+T('प्रोफ़ाइल एडिट करें','Edit Profile')+'</button></div>';
  h+='<div class="card"><b>📊 '+T('मेरे आँकड़े','My stats')+'</b><div style="display:flex;gap:8px;margin-top:10px;text-align:center">'
   +'<div style="flex:1"><div class="big" style="font-size:26px">'+(LB.q||0)+'</div><small class="muted">📝 '+T('सही जवाब','Correct answers')+'</small></div>'
   +'<div style="flex:1"><div class="big" style="font-size:26px">'+(LB.g||0)+'</div><small class="muted">🎮 '+T('गेम जीत','Game wins')+'</small></div>'
@@ -2497,6 +2506,42 @@ function go(id){if(id!==tab){try{history.pushState({},'')}catch(e){}}tab=id;chat
 window.onpopstate=function(){if(LQ){LQ=null;render();return}if(P&&!P.done){pExitAsk()}else if(P&&P.done){pClose()}else if(S.qs&&S.qs.length&&!S.done){quitAsk()}else if(S.qs&&S.qs.length){menu()}else if(tab==='pp'&&PPO){PPO=null;render()}else if(NAV.v){navBack()}else if(tab==='games'&&window.ludoIsOpen&&window.ludoIsOpen()){window.ludoBack()}else if(tab!=='quiz'){tab='quiz';render()}};
 document.getElementById('lg').onclick=function(){};
 var _hpp=window.onpopstate;window.onpopstate=function(e){if(document.getElementById('hpo')){helpClose();return}if(document.getElementById('dro')){dirClose();return}if(_hpp)_hpp.call(window,e)};
+
+/* ===== Edit Profile (WePlay-style list) ===== */
+var EP={open:0};
+function epGet(){try{return JSON.parse(localStorage.getItem('gy_prof')||'{}')||{}}catch(e){return {}}}
+function epSave(o){try{localStorage.setItem('gy_prof',JSON.stringify(o))}catch(e){}}
+function epOpen(){try{history.pushState({},'')}catch(e){}EP.open=1;window.scrollTo(0,0);render()}
+function epClose(){EP.open=0;epDlgClose();render()}
+function epRow(k,v,oc){return '<button onclick="'+oc+'" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit;padding:16px 4px"><span style="flex:1;font-weight:600">'+k+'</span><span class="muted" style="max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+v+'</span><span class="muted" style="font-size:22px">&#8250;</span></button>'}
+function epView(){var a=GYX.au(),o=epGet(),nm=(o.nick||'').trim()||a.name||'Player';
+ var gl={m:T('पुरुष','Male'),f:T('महिला','Female'),o:T('अन्य','Other')};
+ return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button onclick="history.back()" aria-label="Back" style="border:1px solid var(--line);background:var(--card);border-radius:10px;padding:4px 12px;font-size:20px">&#8249;</button><h2 style="margin:0">'+T('प्रोफ़ाइल एडिट','Edit Profile')+'</h2></div>'
+ +'<div class="card" style="padding:4px 14px">'
+ +epRow(T('अवतार','Avatar'),'<span style="font-size:30px">'+lbAv()+'</span>',"epDlg('av')")
+ +epRow(T('उपनाम','Nickname'),esc2(nm),"epDlg('nick')")
+ +epRow(T('यूज़र ID','User ID'),esc2(lbId()),"epCopy()")
+ +'</div><div class="card" style="padding:4px 14px">'
+ +epRow(T('लिंग','Gender'),gl[o.g]||T('चुनें','Select'),"epDlg('g')")
+ +epRow(T('जन्मदिन','Birthday'),esc2(o.bd?o.bd.replace(/-/g,'/'):T('चुनें','Select')),"epDlg('bd')")
+ +epRow(T('क्षेत्र','Region'),esc2(o.rg||'India'),"epDlg('rg')")
+ +epRow(T('हस्ताक्षर','Signature'),esc2(o.sig||''),"epDlg('sig')")
+ +'</div>'}
+function epCopy(){var id=lbId();try{navigator.clipboard.writeText(id)}catch(e){}note(T('ID कॉपी हुई: ','ID copied: ')+id)}
+function epDlgClose(){var d=document.getElementById('epd');if(d&&d.remove)d.remove()}
+function epDlg(k){epDlgClose();var o=epGet(),b='',ttl='',bs='display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit;font-weight:600;padding:14px 4px';
+ if(k==='av'){ttl=T('अवतार चुनें','Pick your avatar');b='<div>'+AVS.map(function(x,i){return '<button class="lang" style="font-size:26px;padding:2px 9px;margin:3px'+(x===lbAv()?';border-color:var(--acc);border-width:2px':'')+'" onclick="lbSet('+i+');epDlgClose()">'+x+'</button>'}).join('')+'</div>'}
+ else if(k==='nick'){ttl=T('उपनाम','Nickname');b='<input id="epi" maxlength="14" value="'+esc2(o.nick||'')+'" placeholder="'+esc2(GYX.au().name||'Player')+'"><button class="btn" onclick="epSet(\'nick\',document.getElementById(\'epi\').value.trim())">'+T('सेव','Save')+'</button>'}
+ else if(k==='sig'){ttl=T('हस्ताक्षर','Signature');b='<input id="epi" maxlength="40" value="'+esc2(o.sig||'')+'"><button class="btn" onclick="epSet(\'sig\',document.getElementById(\'epi\').value.trim())">'+T('सेव','Save')+'</button>'}
+ else if(k==='rg'){ttl=T('क्षेत्र','Region');b='<input id="epi" maxlength="30" value="'+esc2(o.rg||'India')+'"><button class="btn" onclick="epSet(\'rg\',document.getElementById(\'epi\').value.trim())">'+T('सेव','Save')+'</button>'}
+ else if(k==='bd'){ttl=T('जन्मदिन','Birthday');b='<input id="epi" type="date" max="'+new Date().toISOString().slice(0,10)+'" value="'+esc2(o.bd||'')+'"><button class="btn" onclick="epSet(\'bd\',document.getElementById(\'epi\').value)">'+T('सेव','Save')+'</button>'}
+ else if(k==='g'){ttl=T('लिंग','Gender');b=[['m',T('पुरुष','Male')],['f',T('महिला','Female')],['o',T('अन्य','Other')]].map(function(x){return '<button style="'+bs+'" onclick="epSet(\'g\',\''+x[0]+'\')">'+x[1]+(o.g===x[0]?' ✓':'')+'</button>'}).join('')}
+ var d=document.createElement('div');d.id='epd';d.style.cssText='position:fixed;left:0;right:0;top:0;bottom:0;z-index:90;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center';
+ d.onclick=function(e){if(e.target===d)epDlgClose()};
+ d.innerHTML='<div class="card" style="max-width:560px;width:100%;margin:0;border-radius:18px 18px 0 0;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))"><b style="font-size:18px">'+ttl+'</b><div style="margin-top:8px">'+b+'</div></div>';
+ document.body.appendChild(d);var i=document.getElementById('epi');if(i&&i.type!=='date')i.focus()}
+function epSet(k,v){var o=epGet();o[k]=v;epSave(o);epDlgClose();if(k==='nick'){try{lbSync(1)}catch(e){}}render()}
+var _hpp2=window.onpopstate;window.onpopstate=function(e){if(document.getElementById('epd')){epDlgClose();return}if(EP.open){EP.open=0;render();return}if(_hpp2)_hpp2.call(window,e)};
 (function(){var M={h_sandhi:[9,10],h_samas:[11,12,13,14],h_paryay:[1,7,8,29,30,48],h_vilom:[2,6,27,28],h_muhavare:[15,16,17,18,39,40,41,42,43,44,45,46,47],h_shuddhi:[26],h_ekshabd:[31,32],h_vyakaran:[5,33,34],h_sahitya:[3,4,21,22,23,24,25,35,36,37],h_bhasha:[0,20,38],h_deshaj:[19],
  s_sabha:[2,6,7],s_nirman:[0,1,8,27],s_prastavana:[16],s_adhikar:[3,4,9,10,11,12,23],s_kartavya:[13,14,28],s_dpsp:[15],s_rashtrapati:[5,17,22,30],s_sansad:[18,19,20,21,33,34,36],s_rajyapal:[35],s_anusuchi:[26,37,38],s_sanshodhan:[29],s_panchayat:[25],s_nikay:[24,31,32]};
  var idx={hindi:[],samvidhan:[]};QUESTIONS.forEach(function(q){if(idx[q.c])idx[q.c].push(q)});
@@ -4271,7 +4316,7 @@ window.GYC={
  sitaraMs:function(a,b){var R={30:15,70:30,120:60};for(var l=a;l<b;l++)if(R[l])GYC.give(R[l],T('लेवल '+l+' पूरा','Level '+l+' done'))}
 };
 var _lv=window.ludoView;window.window.accCard=accCard;
-ludoView=function(){var o=window.ludoIsOpen();if(o===5)return qView();if(o===6)return spinView();if(!o)return accCard()+hubHome();return _lv()};
+ludoView=function(){var o=window.ludoIsOpen();if(o===5)return qView();if(o===6)return spinView();if(!o)return (window.GYX&&GYX.au&&GYX.au()?'':accCard())+hubHome();return _lv()};
 var _la=window.ludoAfter;window.ludoAfter=function(){var o=window.ludoIsOpen();if(o===5||o===6)return;return _la()};
 var _lo=window.ludoOpen;window.ludoOpen=function(v){if(v===5)qReset();if(v===6){SPN.res=null}return _lo(v)};
 var _lb=window.ludoBack;window.ludoBack=function(){var o=window.ludoIsOpen();if(o===5)qExit();if(o===6)spDone();return _lb()};
