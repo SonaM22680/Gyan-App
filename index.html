@@ -113,6 +113,13 @@ details.hd[open]>summary{border-bottom-left-radius:0;border-bottom-right-radius:
 .gzt.sp{width:100%}.gzt.sp .gzti{display:none}.gzt.sp .gzpv{margin-top:20px}
 .gzt.sp.on{animation:gzglow 1.6s ease-in-out infinite}@keyframes gzglow{0%,100%{box-shadow:0 0 0 rgba(244,180,0,0)}50%{box-shadow:0 0 18px rgba(244,180,0,.7)}}
 .gzt.wide{grid-column:auto}.gzbd{position:absolute;top:7px;left:7px;margin:0;padding:1px 6px;border-radius:9px;background:rgba(244,180,0,.14);color:#ffd54a;font-size:9.5px;font-weight:700;line-height:1.5}
+.gzh{padding:10px 8px 12px;border-radius:20px;background:linear-gradient(160deg,#0b1020,#171d40)}.gzhd{margin:0 4px 8px;font-size:14px}
+.gzg{display:flex!important;flex-wrap:nowrap;gap:5px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}.gzg::-webkit-scrollbar{display:none}
+.gzt{flex:1 0 46px;width:auto;padding:9px 2px 7px;border:0;border-radius:15px;background:linear-gradient(160deg,var(--tc) 0%,rgba(10,16,40,.88) 135%);box-shadow:0 3px 9px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.25)}
+.gzt .gzpv,.gzt small{display:none}
+.gzt .gzti,.gzt.sp .gzti{display:flex;position:static;width:32px;height:32px;margin:0 auto 5px;border-radius:50%;background:rgba(255,255,255,.22);align-items:center;justify-content:center;font-size:18px}
+.gzt b{font-size:9.5px;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.gzbd{top:0;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:7.5px;padding:0 5px;border-radius:0 0 7px 7px;background:#ffd54a;color:#3a2200}.gzt.sp .gzti,.gzt.sp.on .gzti{margin-top:6px}
 .gzp{display:flex;gap:4px}.gzp i{display:block;width:10px;height:10px;border-radius:50%}.gzdt{display:block;width:6px;height:6px;border-radius:50%}
 .gzch{display:grid;grid-template-columns:repeat(4,18px);gap:2px}.gzch i{height:18px;background:#1b2a52;border-radius:3px;font-style:normal;font-size:15px;font-weight:700;text-align:center;line-height:18px;color:#fff}
 </style>
@@ -1105,17 +1112,98 @@ function pcName(){var a=window.GYX&&GYX.au&&GYX.au();try{var n=(JSON.parse(local
 function pcFb(m,b,p,q){var X=window.GYX;if(!X||!X.db)return Promise.reject(0);return X.aTok().then(function(t){if(!t)throw 0;var qs=['auth='+encodeURIComponent(t)];if(q)qs.push(q);var u=p.charAt(0)==='!'?p.slice(1):'ludo/'+p;return fetch(X.db+'/'+u+'.json?'+qs.join('&'),{method:m,body:b!==undefined?JSON.stringify(b):undefined}).then(function(r){return r.json()})})}
 function banPut(){var a=window.GYX&&GYX.au&&GYX.au();if(a)pcFb('PUT',true,'!bans/'+a.uid).catch(function(){})}
 var BG=0;function banGet(){var a=window.GYX&&GYX.au&&GYX.au();if(!a||BG===a.uid)return;BG=a.uid;pcFb('GET',undefined,'!bans/'+a.uid).then(function(r){if(r===true){banned=true;strikes=2;try{localStorage.setItem('gy_strikes',2)}catch(e){}render()}}).catch(function(){BG=0})}
-function pcGet(){if(!PC.code||document.hidden)return;var cut=Date.now()-PC_TTL;pcFb('GET',undefined,'PC'+PC.code+'/m','orderBy='+encodeURIComponent('"$key"')+'&limitToLast=50').then(function(o){var a=[];if(o&&typeof o==='object')Object.keys(o).forEach(function(k){var m=o[k];if(!m||typeof m!=='object')return;if(!(m.ts>cut)){pcFb('DELETE',undefined,'PC'+PC.code+'/m/'+k).catch(function(){});return}m.k=k;a.push(m)});a.sort(function(x,y){return x.ts-y.ts});var sg=a.map(function(m){return m.k}).join();if(sg!==PC.sig){PC.sig=sg;PC.list=a;pcDraw()}}).catch(function(){})}
-function pcDraw(){var d=document.getElementById('pcm');if(!d)return;var h='';PC.list.forEach(function(m,i){if(blocked[m.u||m.n]||!(m.ts>Date.now()-PC_TTL))return;var me=m.u===PU;h+='<div class="msg"><b>'+(me?T('आप','You'):esc2(m.n))+'</b><br>'+esc2(m.m)+(m.img&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(m.img)?'<br><img src="'+m.img+'" style="max-width:100%;border-radius:10px;margin-top:6px">':'')+(me?'':'<br><button class="lang" onclick="pcRep('+i+')">'+T('रिपोर्ट','Report')+'</button> <button class="lang" onclick="pcBlk('+i+')">'+T('ब्लॉक','Block')+'</button>')+'</div>'});d.innerHTML=h||'<p class="muted">'+T('अभी कोई संदेश नहीं।','No messages yet.')+'</p>';d.scrollTop=9e9}
-function pcOpen(c){c=(c||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');if(!c)return;PC.code=c;PC.list=[];PC.sig='';clearInterval(PC.poll);PC.poll=setInterval(pcGet,4000);pcGet();render()}
+function pcGet(){if(!PC.code||document.hidden||!document.getElementById('pcm'))return;var cut=Date.now()-PC_TTL,c=PC.code;
+ pcFb('PUT',{n:String(pcName()).slice(0,14),ts:{'.sv':'timestamp'},seen:PC.seen||''},'PC'+c+'/p/'+PU).catch(function(){}).then(function(){return Promise.all([pcFb('GET',undefined,'PC'+c+'/m','orderBy='+encodeURIComponent('"$key"')+'&limitToLast=50'),pcFb('GET',undefined,'PC'+c+'/p').catch(function(){return null})])}).then(function(r){var o=r[0],p=r[1];if(c!==PC.code)return;if(p&&typeof p==='object'&&!p.error)PC.pres=p;var a=[];if(o&&typeof o==='object')Object.keys(o).forEach(function(k){var m=o[k];if(!m||typeof m!=='object')return;if(!(m.ts>cut)){pcFb('DELETE',undefined,'PC'+c+'/m/'+k).catch(function(){});return}m.k=k;a.push(m)});a.sort(function(x,y){return x.ts-y.ts});var sg=a.map(function(m){return m.k+'~'+(m.ed||0)}).join()+'|'+a.filter(function(m){return m.u===PU}).map(pcSt).join('');if(sg!==PC.sig){PC.sig=sg;PC.list=a;pcDraw()}}).catch(function(){})}
+function pcDraw(){var d=document.getElementById('pcm');if(!d)return;var h='',mx='',now=Date.now(),nb=(d.scrollHeight-d.scrollTop-d.clientHeight<120)||PC.stick;PC.stick=0;
+ PC.list.forEach(function(m,i){if(blocked[m.u||m.n]||!(m.ts>now-PC_TTL))return;if(m.k&&m.k>mx)mx=m.k;var mine=m.u===PU;
+  h+='<div class="msg" onclick="pcMenu('+i+')" style="cursor:pointer;'+(mine?'margin-left:14%;border-color:var(--acc)':'margin-right:14%')+'"><b>'+(mine?T('आप','You'):esc2(m.n))+'</b>'
+  +(m.r&&typeof m.r==='object'?'<div style="border-left:3px solid var(--acc);padding:2px 8px;margin:4px 0;opacity:.75;font-size:14px;line-height:1.3"><b>'+esc2(String(m.r.n||'').slice(0,20))+'</b><br>'+esc2(String(m.r.t||'').slice(0,60))+'</div>':'')
+  +(m.m?'<br>'+esc2(m.m):'')
+  +(m.img&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(m.img)?'<br><img src="'+m.img+'" style="max-width:100%;border-radius:10px;margin-top:6px">':'')
+  +(m.aud&&REAUD.test(m.aud)?'<div onclick="event.stopPropagation()"><audio controls preload="none" src="'+m.aud+'" style="width:100%;margin-top:6px"></audio></div>':'')
+  +(mine?'':'<br><button class="lang" onclick="event.stopPropagation();pcRep('+i+')">'+T('रिपोर्ट','Report')+'</button> <button class="lang" onclick="event.stopPropagation();pcBlk('+i+')">'+T('ब्लॉक','Block')+'</button>')
+  +'<div style="display:flex;justify-content:flex-end;align-items:center;gap:6px;font-size:12px;margin-top:2px">'+(m.ed?'<span style="opacity:.6">'+T('संपादित','edited')+'</span>':'')+'<span style="opacity:.6">'+pcTm(m.ts)+'</span>'+(mine?pcTick(pcSt(m)):'')+'</div></div>'});
+ if(mx>(PC.seen||''))PC.seen=mx;
+ d.innerHTML=h||'<p class="muted">'+T('अभी कोई संदेश नहीं।','No messages yet.')+'</p>';if(nb)d.scrollTop=9e9}
+function pcOpen(c){c=(c||'').trim().toUpperCase().replace(/[^A-Z0-9]/g,'');if(!c)return;PC.code=c;PC.list=[];PC.sig='';PC.pres={};clearInterval(PC.poll);PC.poll=setInterval(pcGet,4000);pcGet();render()}
 function pcNew(){pcOpen(Math.random().toString(36).slice(2,8))}
 function pcLeave(){clearInterval(PC.poll);PC.poll=null;PC.code='';PC.list=[];render()}
 function pcShare(){var t=T('निजी चैट कोड: ','Private chat code: ')+PC.code;if(navigator.share)navigator.share({text:t}).catch(function(){});else if(navigator.clipboard)navigator.clipboard.writeText(t).then(function(){note(T('कोड कॉपी हो गया','Code copied'))}).catch(function(){note(t)});else note(t)}
 function pcSend(){var i=document.getElementById('ci'),v=((i&&i.value)||'').trim();if(!v)return;var er=modSend(v),e=document.getElementById('pce');
- if(er){if(banned){render()}else if(e)e.textContent=er;return}
- if(e)e.textContent='';i.value='';pcFb('POST',{n:pcName(),u:PU,m:v.slice(0,200),ts:Date.now()},'PC'+PC.code+'/m').then(pcGet).catch(function(){note(T('नेटवर्क एरर','Network error'))})}
-function pcRep(i){var m=PC.list[i];if(!m)return;pcFb('POST',{by:PU,n:m.n,u:m.u,m:m.m,img:m.img||'',ts:Date.now()},'PCR'+PC.code).then(function(){note(T('रिपोर्ट भेज दी गई','Report sent'))}).catch(function(){note(T('रिपोर्ट नहीं जा सकी','Could not send report'))})}
+  if(er){if(banned){render()}else if(e)e.textContent=er;return}
+  if(e)e.textContent='';i.value='';var ed=PC.edit,rp=PC.reply;PC.edit=null;PC.reply=null;pcBarDraw();pcTog();PC.stick=1;
+  if(ed){var cur=PC.list.filter(function(x){return x.k===ed})[0];pcFb('PATCH',{m:v.slice(0,200),ed:((cur&&cur.ed)||0)+1},'PC'+PC.code+'/m/'+ed).then(function(r){if(r&&r.error)note(T('एडिट नहीं हो सका','Could not edit'));pcGet()}).catch(function(){note(T('नेटवर्क एरर','Network error'))});return}
+  var o={n:pcName(),u:PU,m:v.slice(0,200),ts:Date.now()};if(rp)o.r=rp;
+  pcFb('POST',o,'PC'+PC.code+'/m').then(pcGet).catch(function(){note(T('नेटवर्क एरर','Network error'))})}
+function pcRep(i){var m=PC.list[i];if(!m)return;pcFb('POST',{by:PU,n:m.n,u:m.u,m:m.m,img:m.img||'',aud:m.aud||'',ts:Date.now()},'PCR'+PC.code).then(function(){note(T('रिपोर्ट भेज दी गई','Report sent'))}).catch(function(){note(T('रिपोर्ट नहीं जा सकी','Could not send report'))})}
 function pcBlk(i){var m=PC.list[i];if(!m)return;blocked[m.u||m.n]=m.n;pcDraw();render();note(T('ब्लॉक किया','Blocked'))}
+
+/* ===== Chat v2: ticks (sent/online/seen), message menu, voice, friends pages, saved ===== */
+var CV='main',PCB={skip:0},VC={on:0,t0:0,iv:0,rec:null,st:null,ch:[],send:0};
+var REAUD=/^data:audio\/(webm|ogg|mp4|mpeg|aac|x-m4a)(;[a-z0-9=.\-]+)*;base64,[A-Za-z0-9+\/=]+$/i;
+function pcPush(){try{history.pushState({},'')}catch(e){}}
+function cvGo(v){try{if(CV==='main')history.pushState({},'');else history.replaceState({},'')}catch(e){}CV=v;FRE.on=0;FRE.sel={};render();window.scrollTo(0,0)}
+function cvBack(){try{history.back()}catch(e){CV='main';render()}}
+function cvHead(t){return '<div style="display:flex;align-items:center;gap:10px;margin:4px 0 8px"><button class="lang" onclick="cvBack()">← '+T('वापस','Back')+'</button><b style="font-size:18px">'+t+'</b></div>'}
+function pcTm(ts){var d=new Date(ts);return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)}
+/* 1 = sent, 2 = someone is online in the room, 3 = seen by someone */
+function pcSt(m){var P=PC.pres||{},ks=Object.keys(P),ref=0,on=0,seen=0;
+ ks.forEach(function(k){var o=P[k];if(o&&typeof o.ts==='number'&&o.ts>ref)ref=o.ts});
+ ks.forEach(function(k){if(k===PU)return;var o=P[k];if(!o||typeof o!=='object')return;if(typeof o.seen==='string'&&m.k&&o.seen>=m.k)seen=1;if(typeof o.ts==='number'&&ref-o.ts<45000)on=1});
+ return seen?3:on?2:1}
+function pcTick(st){return st===3?'<span style="color:#22c55e;font-weight:800;letter-spacing:-4px;margin-right:4px">✓✓</span>':st===2?'<span style="opacity:.6;letter-spacing:-4px;margin-right:4px">✓✓</span>':'<span style="opacity:.6">✓</span>'}
+function pcClip2(t,ok){try{var a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0;left:0;top:0';document.body.appendChild(a);a.focus();a.select();var r=document.execCommand('copy');document.body.removeChild(a);if(r)ok();else note(T('कॉपी नहीं हो सका','Could not copy'))}catch(e){note(T('कॉपी नहीं हो सका','Could not copy'))}}
+function pcClip(t){var ok=function(){note(T('कॉपी हो गया','Copied'))};try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(ok).catch(function(){pcClip2(t,ok)});return}}catch(e){}pcClip2(t,ok)}
+function svGet(){try{var a=JSON.parse(localStorage.getItem('gy_saved_msgs')||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}}
+function svPut(a){try{localStorage.setItem('gy_saved_msgs',JSON.stringify(a.slice(0,200)))}catch(e){}}
+function svDel(i){var a=svGet();a.splice(i,1);svPut(a);render()}
+function pcSavedPage(){var a=svGet();return cvHead('⭐ '+T('सेव किए संदेश','Saved messages')+' ('+a.length+')')+(a.length?a.map(function(x,i){return '<div class="msg"><b>'+esc2(x.n||'')+'</b> <small class="muted">'+new Date(x.ts).toLocaleDateString()+' '+pcTm(x.ts)+'</small><br>'+esc2(x.m)+'<br><button class="lang" onclick="pcClip(svGet()['+i+'].m)">'+T('कॉपी','Copy')+'</button> <button class="lang" onclick="svDel('+i+')">'+T('हटाएँ','Delete')+'</button></div>'}).join(''):'<p class="muted">'+T('अभी कुछ सेव नहीं है। किसी संदेश को दबाकर "सेव करें" चुनें।','Nothing saved yet. Tap a message and choose Save.')+'</p>')}
+/* ---- message menu (tap on a message) ---- */
+function pcMenu(i){var m=PC.list[i];if(!m||document.getElementById('pcmenu'))return;var mine=m.u===PU,txt=!!m.m,ed=mine&&txt&&!m.aud&&!m.img,b=[['↩️',T('जवाब दें','Reply'),'pcReply('+i+')']];
+ if(mine)b.push(['🗑',T('हटाएँ','Delete'),'pcDel('+i+')']);
+ if(txt)b.push(['📋',T('कॉपी करें','Copy'),'pcCopy('+i+')'],['⭐',T('सेव करें','Save'),'pcSave('+i+')']);
+ if(ed)b.push(['✏️',T('संदेश एडिट करें','Edit message'),'pcEdit('+i+')']);
+ pcPush();var o=document.createElement('div');o.id='pcmenu';o.style.cssText='position:fixed;left:0;right:0;top:0;bottom:0;z-index:100;background:rgba(0,0,0,.5);display:flex;align-items:flex-end';
+ o.onclick=function(e){if(e.target===o)pcMenuClose()};
+ o.innerHTML='<div style="background:var(--card);color:var(--ink);width:100%;border-radius:18px 18px 0 0;padding:12px 16px calc(16px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 16px rgba(0,0,0,.3)"><div class="muted" style="text-align:center;margin-bottom:8px;font-size:14px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">'+esc2((m.m||(m.aud?'🎤 Voice':'📷 Photo')).slice(0,60))+'</div>'+b.map(function(x){return '<button class="btn ghost" style="text-align:left;margin:6px 0;border-radius:12px;font-size:17px" onclick="pcMenuClose();'+x[2]+'">'+x[0]+'&nbsp; '+x[1]+'</button>'}).join('')+'</div>';
+ document.body.appendChild(o)}
+function pcMenuClose(pop){var o=document.getElementById('pcmenu');if(o&&o.parentNode)o.parentNode.removeChild(o);if(!pop){PCB.skip=1;setTimeout(function(){PCB.skip=0},700);try{history.back()}catch(e){PCB.skip=0}}}
+function pcRp(){if(PC.edit)return '<div class="msg" style="display:flex;align-items:center;gap:8px;margin:8px 0 0"><span style="flex:1;font-size:14px">✏️ '+T('संदेश एडिट हो रहा है','Editing message')+'</span><button class="lang" onclick="pcCancel()">✖</button></div>';
+ if(PC.reply)return '<div class="msg" style="display:flex;align-items:center;gap:8px;margin:8px 0 0;border-left:4px solid var(--acc)"><span style="flex:1;font-size:14px;line-height:1.3;min-width:0"><b>↩️ '+esc2(PC.reply.n)+'</b><br>'+esc2(PC.reply.t)+'</span><button class="lang" onclick="pcCancel()">✖</button></div>';
+ return ''}
+function pcBarDraw(){var d=document.getElementById('crp');if(d)d.innerHTML=pcRp()}
+function pcCancel(){var i=document.getElementById('ci');if(PC.edit&&i)i.value='';PC.edit=null;PC.reply=null;pcBarDraw();pcTog()}
+function pcReply(i){var m=PC.list[i];if(!m)return;var c=document.getElementById('ci');if(PC.edit&&c)c.value='';PC.reply={n:m.u===PU?pcName():String(m.n||'').slice(0,20),t:m.m?m.m.slice(0,60):(m.aud?'🎤 '+T('वॉइस संदेश','Voice message'):'📷 '+T('फ़ोटो','Photo'))};PC.edit=null;pcBarDraw();if(c)c.focus();pcTog()}
+function pcCopy(i){var m=PC.list[i];if(m&&m.m)pcClip(m.m)}
+function pcSave(i){var m=PC.list[i];if(!m||!m.m)return;var a=svGet();if(a.some(function(x){return x.ts===m.ts&&x.m===m.m})){note(T('पहले से सेव है','Already saved'));return}a.unshift({n:String(m.n||'').slice(0,20),m:m.m,ts:m.ts});svPut(a);note(T('सेव हो गया ⭐','Saved ⭐'))}
+function pcEdit(i){var m=PC.list[i];if(!m||m.u!==PU||!m.m||!m.k)return;PC.edit=m.k;PC.reply=null;var c=document.getElementById('ci');if(c){c.value=m.m;c.focus()}pcBarDraw();pcTog()}
+function pcDel(i){var m=PC.list[i];if(!m||m.u!==PU||!m.k)return;if(!confirm(T('यह संदेश सबके लिए हटाएँ?','Delete this message for everyone?')))return;
+ pcFb('DELETE',undefined,'PC'+PC.code+'/m/'+m.k).then(function(r){if(r&&r.error){note(T('नहीं हट सका','Could not delete'));return}PC.list=PC.list.filter(function(x){return x.k!==m.k});PC.sig='';pcDraw();note(T('संदेश हटा दिया','Message deleted'))}).catch(function(){note(T('नहीं हट सका','Could not delete'))})}
+/* ---- composer: [+] [message box] [mic / send] ---- */
+function pcBar(){
+ if(VC.on)return '<div style="display:flex;gap:8px;align-items:center;margin-top:8px"><button class="btn ghost" style="width:48px;margin:0;padding:8px;font-size:20px" aria-label="Cancel" onclick="vcStop(0)">🗑</button><div style="flex:1;text-align:center;font-weight:800;color:var(--bad)">● <span id="vct">0:00</span> <small class="muted">/ 0:15</small></div><button class="btn" style="width:auto;margin:0;padding:10px 18px" onclick="vcStop(1)">'+T('भेजें','Send')+'</button></div>';
+ return '<div style="display:flex;gap:8px;align-items:center;margin-top:8px"><button class="btn ghost" style="width:48px;margin:0;font-size:24px;padding:6px" aria-label="Photo" onclick="document.getElementById(\'cph\').click()">+</button><input type="file" id="cph" accept="image/*" style="display:none" onchange="pcPhoto(this)"><input id="ci" maxlength="200" oninput="pcTog()" placeholder="'+T('संदेश लिखें','Type a message')+'" style="margin:0;flex:1;min-width:0"><button class="btn" id="cact" style="width:auto;margin:0;padding:10px 18px" aria-label="Send / Voice" onclick="pcAct()"><span style="font-size:20px">🎤</span></button></div>'}
+function pcTog(){var i=document.getElementById('ci'),b=document.getElementById('cact');if(!b)return;b.innerHTML=(i&&i.value.trim())?T('भेजें','Send'):'<span style="font-size:20px">🎤</span>'}
+function pcAct(){var i=document.getElementById('ci');if(i&&i.value.trim())pcSend();else vcStart()}
+/* ---- voice message (max 15 sec) ---- */
+function vcT(s){return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2)}
+function vcErr(t){var e=document.getElementById('pce');if(e)e.textContent=t;else note(t)}
+function vcStart(){if(banned){render();return}if(VC.on)return;
+ if(!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder)){vcErr(T('इस फ़ोन/ऐप में वॉइस रिकॉर्डिंग चालू नहीं है।','Voice recording is not available in this phone/app.'));return}
+ var e=document.getElementById('pce');if(e)e.textContent='';
+ navigator.mediaDevices.getUserMedia({audio:true}).then(function(st){
+  var mt='';['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus','audio/mp4'].some(function(x){if(MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(x)){mt=x;return true}return false});
+  var rec;try{rec=mt?new MediaRecorder(st,{mimeType:mt,audioBitsPerSecond:16000}):new MediaRecorder(st)}catch(x){st.getTracks().forEach(function(t){t.stop()});vcErr(T('इस फ़ोन/ऐप में वॉइस रिकॉर्डिंग चालू नहीं है।','Voice recording is not available in this phone/app.'));return}
+  VC.st=st;VC.rec=rec;VC.ch=[];VC.send=0;VC.on=1;VC.t0=Date.now();
+  rec.ondataavailable=function(ev){if(ev.data&&ev.data.size)VC.ch.push(ev.data)};
+  rec.onstop=function(){try{st.getTracks().forEach(function(t){t.stop()})}catch(x){}var snd=VC.send,ch=VC.ch,ty=rec.mimeType||mt||'audio/webm';VC.rec=null;VC.st=null;VC.ch=[];if(snd&&ch.length)vcPost(new Blob(ch,{type:ty}))};
+  rec.start();clearInterval(VC.iv);VC.iv=setInterval(function(){var s=Math.floor((Date.now()-VC.t0)/1000),d=document.getElementById('vct');if(d)d.textContent=vcT(s);if(s>=15)vcStop(1)},250);
+  var d=document.getElementById('cbar');if(d)d.innerHTML=pcBar();
+ }).catch(function(){vcErr(T('माइक की अनुमति नहीं मिली।','Microphone permission was not given.'))})}
+function vcStop(send){clearInterval(VC.iv);var r=VC.rec;if(send&&Date.now()-VC.t0<800){send=0;note(T('वॉइस बहुत छोटी है','Voice is too short'))}VC.send=send?1:0;VC.on=0;var d=document.getElementById('cbar');if(d)d.innerHTML=pcBar();try{if(r&&r.state!=='inactive')r.stop();else if(VC.st)VC.st.getTracks().forEach(function(t){t.stop()})}catch(e){}}
+function vcPost(b){var fr=new FileReader();fr.onload=function(){var d=String(fr.result||'');if(!REAUD.test(d)){vcErr(T('वॉइस भेजी नहीं जा सकी।','Could not send the voice message.'));return}if(d.length>120000){vcErr(T('वॉइस बहुत बड़ी है।','Voice is too large.'));return}
+ var o={n:pcName(),u:PU,m:'',aud:d,ts:Date.now()};if(PC.reply){o.r=PC.reply;PC.reply=null;pcBarDraw()}PC.stick=1;
+ pcFb('POST',o,'PC'+PC.code+'/m').then(function(r){if(r&&r.error)vcErr(T('वॉइस नहीं जा सकी','Voice could not be sent'));pcGet()}).catch(function(){vcErr(T('नेटवर्क एरर','Network error'))})};fr.readAsDataURL(b)}
 
 var VISION_KEY=''; /* Google Cloud Vision API key: photo SafeSearch check. Khali ho to photo bhejna band rahega / empty = photo sending stays off */
 function lvl(s){return['UNKNOWN','VERY_UNLIKELY','UNLIKELY','POSSIBLE','LIKELY','VERY_LIKELY'].indexOf(s)}
@@ -1142,7 +1230,7 @@ function frCode(){var i=lbId();return i?i.replace('-',''):''}
 function frOk(k){return /^[A-Za-z0-9]{10,40}$/.test(k)}
 function frClean(o){var a=[];if(o&&typeof o==='object'&&!o.error)Object.keys(o).forEach(function(k){var v=o[k];if(!frOk(k)||!v||typeof v!=='object')return;a.push({u:k,n:String(v.n||'Player').slice(0,14),id:String(v.id||'').slice(0,8),a:AVS.indexOf(v.a)>-1?v.a:'🙂',ts:+v.ts||0})});return a}
 function frBadge(){var ix=MODULES.map(function(x){return x.id}).indexOf('chat'),bt=document.querySelectorAll('#nav button')[ix];if(!bt)return;var o=bt.querySelector('.bdg');if(o)o.remove();if(FR.on&&FR.req.length&&frMe()){var i=document.createElement('i');i.className='bdg';i.textContent=FR.req.length;bt.appendChild(i)}}
-function frShow(){var d=document.getElementById('frb');if(d)d.innerHTML=frHTML();frBadge()}
+function frShow(){var d=document.getElementById('frb');if(d){var e=document.getElementById('fri'),v=e?e.value:'';d.innerHTML=frHTML();if(v){e=document.getElementById('fri');if(e)e.value=v}}frBadge()}
 function frNotify(n){var m=T('🔔 नई फ्रेंड रिक्वेस्ट: ','🔔 New friend request: ')+n;note(m);try{if(window.Notification&&Notification.permission==='granted'&&document.hidden)new Notification(T('ज्ञान ऐप','Gyan App'),{body:m})}catch(e){}}
 function frFetch(quiet){var me=frMe();if(!me||navigator.onLine===false||FR.busy)return Promise.resolve();FR.busy=1;
  return Promise.all([pcFb('GET',undefined,'FR/'+me),pcFb('GET',undefined,'FL/'+me)]).then(function(r){FR.busy=0;
@@ -1179,15 +1267,23 @@ function frAcc(i){var me=frMe(),q=FR.req[i];if(!me||!q)return;
 function frRej(i){var me=frMe(),q=FR.req[i];if(!me||!q)return;
  pcFb('DELETE',undefined,'FR/'+me+'/'+q.u).then(function(){delete FR.known[q.u];FR.t=0;note(T('रिक्वेस्ट हटाई गई','Request declined'));return frFetch()}).catch(function(){note(T('नेटवर्क एरर','Network error'))})}
 function frHTML(){var me=frMe();if(!me)return '';
- var h='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>👥 '+T('दोस्त','Friends')+'</b><span><button class="lang" onclick="frEditTog()">'+(FRE.on?T('रद्द करें','Cancel'):'✏️ '+T('एडिट','Edit'))+'</button> <button class="lang" onclick="frTog()">'+(FR.on?'🔔 '+T('सूचना चालू','Alerts ON'):'🔕 '+T('सूचना बंद','Alerts OFF'))+'</button></span></div>'
-  +'<p class="muted" style="margin:6px 0">'+T('आपकी ID: ','Your ID: ')+'<b>'+lbId()+'</b> · '+T('दोस्त को यह ID दें','share this ID with your friend')+'</p>'
-  +'<div style="display:flex;gap:8px"><input id="fri" maxlength="9" placeholder="'+T('दोस्त की ID (GY-AB12C)','Friend ID (GY-AB12C)')+'" style="margin:0;flex:1"><button class="btn" style="width:auto;margin:0;padding:8px 16px" onclick="frAdd()">➕ '+T('जोड़ें','Add')+'</button></div>';
- if(FR.err)h+='<p class="err">'+T('फ्रेंड सिस्टम अभी सर्वर पर चालू नहीं है (Firebase rules में FID, FR, FL खोलने होंगे)।','Friends are not enabled on the server yet (open FID, FR and FL in the Firebase rules).')+'</p>';
- if(FR.req.length){h+='<p style="margin:12px 0 4px"><b>📨 '+T('फ्रेंड रिक्वेस्ट','Friend requests')+' ('+FR.req.length+')</b></p>'+FR.req.map(function(q,i){return '<div class="msg" style="display:flex;align-items:center;gap:10px"><span style="font-size:26px">'+q.a+'</span><span style="flex:1;line-height:1.25"><b>'+esc2(q.n)+'</b><br><small class="muted">'+esc2(q.id)+'</small></span><button class="btn" style="width:auto;margin:0;padding:8px 12px" onclick="frAcc('+i+')">✅ '+T('स्वीकारें','Accept')+'</button><button class="btn ghost" style="width:auto;margin:0;padding:8px 12px" aria-label="Decline" onclick="frRej('+i+')">✖</button></div>'}).join('')}
- h+='<p style="margin:12px 0 4px"><b>'+T('मेरे दोस्त','My friends')+' ('+FR.fl.length+')</b></p>';
- h+=FR.fl.length?FR.fl.map(function(f){return '<div class="msg" style="display:flex;align-items:center;gap:10px"'+(FRE.on?' onclick="frPick(\''+f.u+'\')"':'')+'>'+(FRE.on?'<span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;'+(FRE.sel[f.u]?'background:var(--acc);color:var(--onacc);border:2px solid var(--acc)':'border:2px solid var(--line)')+'">'+(FRE.sel[f.u]?'✓':'')+'</span>':'')+'<span style="font-size:26px">'+f.a+'</span><span style="flex:1;line-height:1.25"><b>'+esc2(f.n)+'</b><br><small class="muted">'+((FR.live||{})[f.u]?'🟢 '+T('खेल रहा है: ','Playing: ')+({j:'Jackaroo',c:'Chess'}[FR.live[f.u].g]||'Ludo'):esc2(f.id))+'</small></span>'+((!FRE.on&&(FR.live||{})[f.u])?'<button class="btn" style="width:auto;margin:0;padding:8px 12px" onclick="gyWatch(\''+f.u+'\')">👁 '+T('देखें','Watch')+'</button>':'')+'</div>'}).join(''):'<p class="muted">'+T('अभी कोई दोस्त नहीं। ऊपर ID डालकर जोड़ें।','No friends yet. Add one using their ID above.')+'</p>';
- if(FRE.on){var dn=Object.keys(FRE.sel).length;h+='<button class="btn" style="background:var(--bad);color:#fff;opacity:'+(dn?1:.5)+'"'+(dn?'':' disabled')+' onclick="frDelAsk()">🗑 '+T('हटाएँ','Delete')+' ('+dn+')</button>'}
- return h+'</div>'}
+  if(CV==='friends')return frPageFriends();
+  if(CV==='add')return frPageAdd();
+  var rq=FR.req.length?' <span style="background:#e11d48;color:#fff;border-radius:9px;padding:1px 7px;font-size:12px">'+FR.req.length+'</span>':'';
+  return '<div class="card" style="display:flex;align-items:center;gap:8px"><button class="msg" style="flex:1;margin:0;text-align:left;display:flex;align-items:center;font-weight:800;font-size:16px;color:var(--ink)" onclick="cvGo(\'friends\')"><span>👥 '+T('मेरे दोस्त','My friends')+' ('+FR.fl.length+')</span><span style="margin-left:auto;font-size:20px">›</span></button><button class="btn" style="width:auto;margin:0;padding:12px 16px" onclick="cvGo(\'add\')">➕ '+T('जोड़ें','Add')+rq+'</button></div>'}
+function frErr(){return FR.err?'<p class="err">'+T('फ्रेंड सिस्टम अभी सर्वर पर चालू नहीं है (Firebase rules में FID, FR, FL खोलने होंगे)।','Friends are not enabled on the server yet (open FID, FR and FL in the Firebase rules).')+'</p>':''}
+function frDelOne(u){FRE.sel={};FRE.sel[u]=1;frDelAsk()}
+function frPageFriends(){var h=cvHead('👥 '+T('मेरे दोस्त','My friends')+' ('+FR.fl.length+')');
+  h+='<div class="card"><div style="display:flex;justify-content:flex-end;gap:8px"><button class="lang" onclick="frEditTog()">'+(FRE.on?T('रद्द करें','Cancel'):'✏️ '+T('एडिट','Edit'))+'</button><button class="lang" onclick="cvGo(\'add\')">➕ '+T('जोड़ें','Add')+'</button></div>'+frErr();
+  h+=FR.fl.length?FR.fl.map(function(f){return '<div class="msg" style="display:flex;align-items:center;gap:10px"'+(FRE.on?' onclick="frPick(\''+f.u+'\')"':'')+'>'+(FRE.on?'<span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;flex:none;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;'+(FRE.sel[f.u]?'background:var(--acc);color:var(--onacc);border:2px solid var(--acc)':'border:2px solid var(--line)')+'">'+(FRE.sel[f.u]?'✓':'')+'</span>':'')+'<span style="font-size:26px">'+f.a+'</span><span style="flex:1;line-height:1.25"><b>'+esc2(f.n)+'</b><br><small class="muted">'+((FR.live||{})[f.u]?'🟢 '+T('खेल रहा है: ','Playing: ')+({j:'Jackaroo',c:'Chess'}[FR.live[f.u].g]||'Ludo'):esc2(f.id))+'</small></span>'+((!FRE.on&&(FR.live||{})[f.u])?'<button class="btn" style="width:auto;margin:0;padding:8px 12px" onclick="gyWatch(\''+f.u+'\')">👁 '+T('देखें','Watch')+'</button>':'')+(FRE.on?'':'<button class="btn ghost" style="width:auto;margin:0;padding:6px 10px;color:var(--bad);border-color:var(--bad)" aria-label="Delete friend" onclick="frDelOne(\''+f.u+'\')">🗑</button>')+'</div>'}).join(''):'<p class="muted">'+T('अभी कोई दोस्त नहीं। "जोड़ें" दबाकर ID से जोड़ें।','No friends yet. Tap Add to add one using their ID.')+'</p>';
+  if(FRE.on){var dn=Object.keys(FRE.sel).length;h+='<button class="btn" style="background:var(--bad);color:#fff;opacity:'+(dn?1:.5)+'"'+(dn?'':' disabled')+' onclick="frDelAsk()">🗑 '+T('हटाएँ','Delete')+' ('+dn+')</button>'}
+  return h+'</div>'}
+function frPageAdd(){var h=cvHead('➕ '+T('दोस्त जोड़ें','Add friend'));
+  h+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>'+T('आपकी ID: ','Your ID: ')+lbId()+'</b><button class="lang" onclick="frTog()">'+(FR.on?'🔔 '+T('सूचना चालू','Alerts ON'):'🔕 '+T('सूचना बंद','Alerts OFF'))+'</button></div>'
+   +'<p class="muted" style="margin:6px 0">'+T('दोस्त को यह ID दें','Share this ID with your friend')+'</p>'
+   +'<div style="display:flex;gap:8px"><input id="fri" maxlength="9" placeholder="'+T('दोस्त की ID (GY-AB12C)','Friend ID (GY-AB12C)')+'" style="margin:0;flex:1"><button class="btn" style="width:auto;margin:0;padding:8px 16px" onclick="frAdd()">➕ '+T('जोड़ें','Add')+'</button></div>'+frErr();
+  h+='<p style="margin:14px 0 4px"><b>📨 '+T('फ्रेंड रिक्वेस्ट','Friend requests')+' ('+FR.req.length+')</b></p>'+(FR.req.length?FR.req.map(function(q,i){return '<div class="msg" style="display:flex;align-items:center;gap:10px"><span style="font-size:26px">'+q.a+'</span><span style="flex:1;line-height:1.25"><b>'+esc2(q.n)+'</b><br><small class="muted">'+esc2(q.id)+'</small></span><button class="btn" style="width:auto;margin:0;padding:8px 12px" onclick="frAcc('+i+')">✅ '+T('स्वीकारें','Accept')+'</button><button class="btn ghost" style="width:auto;margin:0;padding:8px 12px" aria-label="Decline" onclick="frRej('+i+')">✖</button></div>'}).join(''):'<p class="muted">'+T('अभी कोई रिक्वेस्ट नहीं।','No friend requests yet.')+'</p>');
+  return h+'</div>'}
 
 /* ===== Watch a friend's online game (LIVE_ presence + SPEC_ spectator chat) ===== */
 var LIVE={cur:null,t:0};
@@ -1215,16 +1311,18 @@ function frDelAsk(){var ks=Object.keys(FRE.sel);if(!ks.length)return;if(!confirm
  Promise.all(ks.map(function(u){return Promise.all([pcFb('DELETE',undefined,'FL/'+me+'/'+u),pcFb('DELETE',undefined,'FL/'+u+'/'+me)])})).then(function(){
   FR.fl=FR.fl.filter(function(f){return !FRE.sel[f.u]});FRE.on=0;FRE.sel={};FR.t=0;note(T('दोस्त हटा दिए गए','Friends removed'));frShow();frFetch(1)}).catch(function(){note(T('नहीं हट सका, बाद में कोशिश करें','Could not remove, try later'))})}
 function chat(){
- banGet();
- var h='<h2>💬 '+T('चैट','Chat')+'</h2>';
- if(banned)return h+'<p class="err">'+T('आपकी ID चैट से ब्लॉक कर दी गई है।','Your ID has been blocked from chat.')+'</p>';
- if(!(window.GYX&&GYX.au&&GYX.au()))return h+accCard(T('चैट के लिए लॉगिन करें।','Log in to use chat.'));
- h+='<div id="frb">'+frHTML()+'</div>';setTimeout(frLoad,60);
-  if(!PC.code){PC.code='COMMON';PC.list=[];PC.sig='';setTimeout(pcGet,50)}
- {if(!PC.poll)PC.poll=setInterval(pcGet,4000);
-  h+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>'+T('सबके लिए एक ही चैट रूम','Common room for everyone')+'</b></div><div id="pcm" style="max-height:46vh;overflow-y:auto;margin:8px 0"></div><p class="err" id="pce">'+chatErr+'</p><input id="ci" maxlength="200" placeholder="'+T('संदेश लिखें','Type a message')+'"><div style="display:flex;gap:8px"><button class="btn ghost" style="width:56px;margin-top:8px;font-size:24px;padding:6px" aria-label="Photo" onclick="document.getElementById(\'cph\').click()">+</button><input type="file" id="cph" accept="image/*" style="display:none" onchange="pcPhoto(this)"><button class="btn" onclick="pcSend()">'+T('भेजें','Send')+'</button></div></div>'}
- Object.keys(blocked).forEach(function(u,i){h+='<p class="muted">'+esc2(blocked[u]===true?u:blocked[u])+' '+T('ब्लॉक है','is blocked')+' <button class="lang" onclick="unb('+i+')">'+T('अनब्लॉक','Unblock')+'</button></p>'});
- return h}
+  banGet();
+  var h='<h2>💬 '+T('चैट','Chat')+'</h2>';
+  if(banned)return h+'<p class="err">'+T('आपकी ID चैट से ब्लॉक कर दी गई है।','Your ID has been blocked from chat.')+'</p>';
+  if(!(window.GYX&&GYX.au&&GYX.au()))return h+accCard(T('चैट के लिए लॉगिन करें।','Log in to use chat.'));
+  if(CV==='saved')return pcSavedPage();
+  if(CV==='friends'||CV==='add'){setTimeout(frLoad,60);return '<div id="frb">'+frHTML()+'</div>'}
+  h+='<div id="frb">'+frHTML()+'</div>';setTimeout(frLoad,60);
+   if(!PC.code){PC.code='COMMON';PC.list=[];PC.sig='';setTimeout(pcGet,50)}
+  {if(!PC.poll)PC.poll=setInterval(pcGet,4000);setTimeout(pcGet,50);
+   h+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b>'+T('सबके लिए एक ही चैट रूम','Common room for everyone')+'</b><button class="lang" onclick="cvGo(\'saved\')">⭐ '+T('सेव','Saved')+'</button></div><div id="pcm" style="max-height:46vh;overflow-y:auto;margin:8px 0"></div><p class="err" id="pce">'+chatErr+'</p><div id="crp">'+pcRp()+'</div><div id="cbar">'+pcBar()+'</div></div>'}
+  Object.keys(blocked).forEach(function(u,i){h+='<p class="muted">'+esc2(blocked[u]===true?u:blocked[u])+' '+T('ब्लॉक है','is blocked')+' <button class="lang" onclick="unb('+i+')">'+T('अनब्लॉक','Unblock')+'</button></p>'});
+  return h}
 
 // ===== आने वाले हिस्से / Coming sections =====
 function soon(h,e,items){return '<div class="card"><h2>'+T(h,e)+'</h2><p class="muted">'+T('जल्द आ रहा है','Coming soon')+'</p><ul>'+items.map(function(i){return '<li>'+pick(i)+'</li>'}).join('')+'</ul></div>'}
@@ -2521,7 +2619,7 @@ function render(){
  document.getElementById('app').innerHTML=m.view();if(tab==='games')ludoAfter();if(tab==='chat')pcDraw();if(tab==='exam')exAfter();else exStop();
  var live=tab==='quiz'&&S.qs&&S.qs.length&&!S.done&&!S.locked;if(live){if(!TM){left=40;TM=setInterval(tick,1000)}}else{clearInterval(TM);TM=null;left=40}
  document.getElementById('nav').innerHTML=MODULES.map(function(x){return '<button class="'+(x.id===tab?'on':'')+'" onclick="go(\''+x.id+'\')"><span>'+x.icon+'</span>'+(lang==='h'?x.t[0]:x.t[1])+'</button>'}).join('');frBadge()}
-function go(id){if(id!==tab){try{history.pushState({},'')}catch(e){}}tab=id;chatErr='';if(id!=='chat'){clearInterval(PC.poll);PC.poll=null}render()}
+function go(id){if(id!==tab){try{history.pushState({},'')}catch(e){}}tab=id;chatErr='';if(id!=='chat'){clearInterval(PC.poll);PC.poll=null;CV='main';if(VC.on)vcStop(0)}render()}
 window.onpopstate=function(){if(LQ){LQ=null;render();return}if(P&&!P.done){pExitAsk()}else if(P&&P.done){pClose()}else if(S.qs&&S.qs.length&&!S.done){quitAsk()}else if(S.qs&&S.qs.length){menu()}else if(tab==='pp'&&PPO){PPO=null;render()}else if(NAV.v){navBack()}else if(tab==='games'&&window.ludoIsOpen&&window.ludoIsOpen()){window.ludoBack()}else if(tab!=='quiz'){tab='quiz';render()}};
 document.getElementById('lg').onclick=function(){};
 var _hpp=window.onpopstate;window.onpopstate=function(e){if(document.getElementById('hpo')){helpClose();return}if(document.getElementById('dro')){dirClose();return}if(_hpp)_hpp.call(window,e)};
@@ -4326,12 +4424,12 @@ function hubHome(){var s=ldSpin(),can=s.last!==dk();
  var sw='<svg viewBox="0 0 200 200" width="46" style="display:block;margin:0 auto"><circle cx="100" cy="100" r="92" fill="#1a2540" stroke="#f4b400" stroke-width="8"/><g stroke="#b8860b" stroke-width="3"><path d="M100 100 L100 12M100 100 L188 100M100 100 L100 188M100 100 L12 100M100 100 L162 38M100 100 L162 162M100 100 L38 162M100 100 L38 38"/></g><circle cx="100" cy="100" r="16" fill="#f4b400"/><path d="M90 2 L110 2 L100 24 Z" fill="#ef4444"/></svg>';
  function tile(oc,cls,col,ic,pv,en,hi,extra){return '<button class="gzt '+cls+'" style="--tc:'+col+'" onclick="'+oc+'"><span class="gzti">'+ic+'</span>'+(pv?'<span class="gzpv">'+pv+'</span>':'')+'<b>'+en+'</b><small>'+hi+'</small>'+(extra||'')+'</button>'}
  return '<div class="gzh"><div class="gzhd"><span>🎮 '+T('गेम्स','Games')+'</span><span style="color:#ffd54a">🪙 '+coins()+'</span></div><div class="gzg">'
- +tile('ludoOpen(1)','','#e0443e','🎲',dots,'Ludo Classic','लूडो क्लासिक')
- +tile('ludoOpen(4)','','#5b6b8c','♟️',chess,'Chess Arena','शतरंज अखाड़ा')
- +tile('ludoOpen(6)','sp'+(can?' on':''),'#f4b400','',sw,'Lucky Spin','लकी स्पिन','<span class="gzbd">'+(can?'🎁 '+T('तैयार','Ready'):'✅ '+T('हो गया','Done'))+'</span>')
- +tile('ludoOpen(2)','','#2e9e4f','🃏',jk,'Jackaroo','जैकारू मास्टर')
- +tile('ludoOpen(5)','','#3b6fe0','⚡',vs,'1v1 Clash','1v1 क्लैश')
- +tile('ludoOpen(3)','wide','#a855f7','⭐','<span style="font-size:12px;letter-spacing:1px;white-space:nowrap">⭐ ⭐ 🔴 ⭐</span>','Sitara Rush','सितारा रश')
+ +tile('ludoOpen(1)','','#ff6b4a','🎲',dots,'Ludo','लूडो')
+ +tile('ludoOpen(4)','','#06b6d4','♟️',chess,'Chess','शतरंज')
+ +tile('ludoOpen(6)','sp'+(can?' on':''),'#f59e0b','🎡',sw,'Spin','स्पिन','<span class="gzbd">'+(can?'🎁 '+T('तैयार','Ready'):'✅ '+T('हो गया','Done'))+'</span>')
+ +tile('ludoOpen(2)','','#22c55e','🃏',jk,'Jackaroo','जैकारू')
+ +tile('ludoOpen(5)','','#6366f1','⚡',vs,'1v1','1v1')
+ +tile('ludoOpen(3)','wide','#ec4899','⭐','<span style="font-size:12px;letter-spacing:1px;white-space:nowrap">⭐ ⭐ 🔴 ⭐</span>','Sitara','सितारा')
  +'</div></div>'}
 /* ---------- Coins: entry / inaam (sirf online + Sitara Rush) ---------- */
 window.GYC={
@@ -4398,6 +4496,7 @@ MODULES.forEach(function(m){if(m.id==='quiz')m.view=quiz});
 MODULES.forEach(function(m){if(m.id==='saved'){m.view=hubView;m.t=['सेव / रिवीजन','Saved / Revise']}});
 var _go=go;go=function(id){SK=false;if(id!=='saved'||id===tab)PGV=null;return _go(id)};
 var _pp2=window.onpopstate;window.onpopstate=function(e){if(SK&&tab==='quiz'){SK=false;render();window.scrollTo(0,0);return}if(tab==='saved'&&PGV&&!NAV.v){PGV=null;render();window.scrollTo(0,0);return}if(typeof _pp2==='function')return _pp2.call(this,e)};
+var _pcb=window.onpopstate;window.onpopstate=function(e){if(PCB.skip){PCB.skip=0;return}if(document.getElementById('pcmenu')){pcMenuClose(1);return}if(tab==='chat'&&CV!=='main'){CV='main';render();window.scrollTo(0,0);return}if(typeof _pcb==='function')return _pcb.call(this,e)};
 var _dt=dirText;dirText=function(){var L=function(a,b){return '<li>'+T(a,b)+'</li>'};
  if(tab==='saved'&&PGV==='rev')return[T('रिवीजन पेज के बारे में','About the Revision page'),'<ul>'+[L('गलत सवाल अपने आप रिवीजन लिस्ट में जुड़ते हैं और रिवीजन में सही करने पर हट जाते हैं।','Wrong answers join the revision list automatically and leave it once you get them right in revision.'),L('विषय-वार रिपोर्ट से कमज़ोर विषय पता चलता है।','The subject-wise report shows your weak subjects.')].join('')+'</ul>']
  if(spOpen())return[T('Lucky Spin के बारे में','About Lucky Spin'),'<ul>'+[L('रोज़ एक बार स्पिन करें। इनाम: 🪙 कॉइन्स, 🎨 नई थीम या 💖 Sitara Rush का एक्स्ट्रा लाइफ।','Spin once a day. Rewards: 🪙 coins, a 🎨 new theme or 💖 an extra Sitara Rush life.'),L('कोई असली पैसा या इनाम नहीं मिलता, सिर्फ़ गेम के कॉइन्स और थीम।','No real money or prizes, only game coins and themes.')].join('')+'</ul>']
